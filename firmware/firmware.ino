@@ -4,13 +4,18 @@
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
 #define SERVO_FREQ 50       // Analog servos run at ~50 Hz updates
-#define SERVO_CYCLE 0.02
+#define SERVO_CYCLE 0.02    // 50Hz is 0.02s cycle
 #define SERVO_STEP 4096     // 4096 descrete steps
 
 // HS311
-#define SERVO_MIN 0.000600  //  600us
-#define SERVO_MAX 0.002300  // 2300us
+#define HS311_SERVO_MIN 0.000600  //  600us
+#define HS311_SERVO_MAX 0.002300  // 2300us
 
+// HS645MG
+#define HS645_SERVO_MIN 0.000900  //  900us
+#define HS645_SERVO_MAX 0.002100  // 2100us
+
+// Calibration 
 #define BUFFER_SIZE 15
 #define LF 10
 
@@ -152,7 +157,7 @@ void setMax() {
 void test() {
   Serial.println("test");
   pwm.setPWM(cal_servo, 0, degToPulse(0, cal_min, cal_max));
-  delay(1000);
+  delay(250);
   for (int deg = 0; deg < 180; deg += 10) {
     pwm.setPWM(cal_servo, 0, degToPulse(deg, cal_min, cal_max));
     Serial.println(deg);
