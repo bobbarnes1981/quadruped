@@ -7,7 +7,7 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 #define SERVO_CYCLE 0.02    // 50Hz is 0.02s cycle
 #define SERVO_STEP 4096     // 4096 descrete steps
 
-// TODO: calibrate servos separately?
+// TODO: calibrate controller oscillator then calibrate servos separately
 
 // HS311
 #define HS311_SERVO_MIN 0.000600  //  600us
@@ -18,14 +18,14 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 #define HS645_SERVO_MAX 0.002100  // 2100us
 
 // HS422
-#define HS422_SERVO_MIN 0.000600  //  600us
+#define HS422_SERVO_MIN 0.000600  //  900us
 #define HS422_SERVO_MAX 0.002100  // 2100us
 
 // Calibration 
 #define BUFFER_SIZE 15
 #define LF 10
 
-bool calibrationMode = true;
+bool calibrationMode = false;
 
 int cal_servo = 0;
 double cal_min = 0.000900;
@@ -50,19 +50,19 @@ void setup() {
 
   pwm.setPWM( 0, 0, degToPulse( 90, HS422_SERVO_MIN, HS422_SERVO_MAX)); delay(1000);
   pwm.setPWM( 1, 0, degToPulse(180, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
-  pwm.setPWM( 2, 0, degToPulse(160, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
+  pwm.setPWM( 2, 0, degToPulse(150, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
   
   pwm.setPWM( 4, 0, degToPulse( 90, HS422_SERVO_MIN, HS422_SERVO_MAX)); delay(1000);
   pwm.setPWM( 5, 0, degToPulse(  0, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
-  pwm.setPWM( 6, 0, degToPulse( 20, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
+  pwm.setPWM( 6, 0, degToPulse( 30, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
 
   pwm.setPWM( 8, 0, degToPulse( 90, HS422_SERVO_MIN, HS422_SERVO_MAX)); delay(1000);
   pwm.setPWM( 9, 0, degToPulse(180, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
-  pwm.setPWM(10, 0, degToPulse(160, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
+  pwm.setPWM(10, 0, degToPulse(150, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
   
   pwm.setPWM(12, 0, degToPulse( 90, HS422_SERVO_MIN, HS422_SERVO_MAX)); delay(1000);
   pwm.setPWM(13, 0, degToPulse(  0, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
-  pwm.setPWM(14, 0, degToPulse( 20, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
+  pwm.setPWM(14, 0, degToPulse( 30, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
 
 }
 
@@ -200,5 +200,24 @@ void go() {
 }
 
 void execution() {
+
+  delay(1000);
   
+  pwm.setPWM( 1, 0, degToPulse( 90, HS645_SERVO_MIN, HS645_SERVO_MAX));
+  pwm.setPWM( 2, 0, degToPulse(120, HS645_SERVO_MIN, HS645_SERVO_MAX));
+  
+  delay(1000);
+  
+  pwm.setPWM( 5, 0, degToPulse( 90, HS645_SERVO_MIN, HS645_SERVO_MAX));
+  pwm.setPWM( 6, 0, degToPulse( 70, HS645_SERVO_MIN, HS645_SERVO_MAX));
+  
+  delay(1000);
+  
+  pwm.setPWM( 9, 0, degToPulse( 90, HS645_SERVO_MIN, HS645_SERVO_MAX));
+  pwm.setPWM(10, 0, degToPulse(120, HS645_SERVO_MIN, HS645_SERVO_MAX));
+  
+  delay(1000);
+  
+  pwm.setPWM(13, 0, degToPulse( 90, HS645_SERVO_MIN, HS645_SERVO_MAX));
+  pwm.setPWM(14, 0, degToPulse( 70, HS645_SERVO_MIN, HS645_SERVO_MAX));
 }
