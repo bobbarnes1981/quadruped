@@ -48,21 +48,21 @@ void setup() {
 
   //hip, thigh, knee
 
-  pwm.setPWM( 0, 0, degToPulse( 90, HS422_SERVO_MIN, HS422_SERVO_MAX));
-  pwm.setPWM( 1, 0, degToPulse(180, HS645_SERVO_MIN, HS645_SERVO_MAX));
-  pwm.setPWM( 2, 0, degToPulse(160, HS645_SERVO_MIN, HS645_SERVO_MAX));
+  pwm.setPWM( 0, 0, degToPulse( 90, HS422_SERVO_MIN, HS422_SERVO_MAX)); delay(1000);
+  pwm.setPWM( 1, 0, degToPulse(180, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
+  pwm.setPWM( 2, 0, degToPulse(160, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
   
-  pwm.setPWM( 4, 0, degToPulse( 90, HS422_SERVO_MIN, HS422_SERVO_MAX));
-  pwm.setPWM( 5, 0, degToPulse(  0, HS645_SERVO_MIN, HS645_SERVO_MAX));
-  pwm.setPWM( 6, 0, degToPulse( 20, HS645_SERVO_MIN, HS645_SERVO_MAX));
+  pwm.setPWM( 4, 0, degToPulse( 90, HS422_SERVO_MIN, HS422_SERVO_MAX)); delay(1000);
+  pwm.setPWM( 5, 0, degToPulse(  0, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
+  pwm.setPWM( 6, 0, degToPulse( 20, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
 
-  pwm.setPWM( 8, 0, degToPulse( 90, HS422_SERVO_MIN, HS422_SERVO_MAX));
-  pwm.setPWM( 9, 0, degToPulse(180, HS645_SERVO_MIN, HS645_SERVO_MAX));
-  pwm.setPWM(10, 0, degToPulse(160, HS645_SERVO_MIN, HS645_SERVO_MAX));
+  pwm.setPWM( 8, 0, degToPulse( 90, HS422_SERVO_MIN, HS422_SERVO_MAX)); delay(1000);
+  pwm.setPWM( 9, 0, degToPulse(180, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
+  pwm.setPWM(10, 0, degToPulse(160, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
   
-  pwm.setPWM(12, 0, degToPulse( 90, HS422_SERVO_MIN, HS422_SERVO_MAX));
-  pwm.setPWM(13, 0, degToPulse(  0, HS645_SERVO_MIN, HS645_SERVO_MAX));
-  pwm.setPWM(14, 0, degToPulse( 20, HS645_SERVO_MIN, HS645_SERVO_MAX));
+  pwm.setPWM(12, 0, degToPulse( 90, HS422_SERVO_MIN, HS422_SERVO_MAX)); delay(1000);
+  pwm.setPWM(13, 0, degToPulse(  0, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
+  pwm.setPWM(14, 0, degToPulse( 20, HS645_SERVO_MIN, HS645_SERVO_MAX)); delay(1000);
 
 }
 
