@@ -46,7 +46,7 @@ void setup() {
   // In theory the internal oscillator is 25MHz but it really isn't
   // that precise. You can 'calibrate' by tweaking this number till
   // you get the frequency you're expecting!
-  pwm.setOscillatorFrequency(27000000);  // The int.osc. is closer to 27MHz  
+  pwm.setOscillatorFrequency(OSC_FREQ);  // The int.osc. is closer to 27MHz  
   pwm.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
 
   delay(10);
