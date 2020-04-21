@@ -7,6 +7,8 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 #define SERVO_CYCLE 0.02    // 50Hz is 0.02s cycle
 #define SERVO_STEP 4096     // 4096 descrete steps
 
+// TODO: calibrate servos separately?
+
 // HS311
 #define HS311_SERVO_MIN 0.000600  //  600us
 #define HS311_SERVO_MAX 0.002300  // 2300us
@@ -14,6 +16,10 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 // HS645MG
 #define HS645_SERVO_MIN 0.000900  //  900us
 #define HS645_SERVO_MAX 0.002100  // 2100us
+
+// HS422
+#define HS422_SERVO_MIN 0.000600  //  600us
+#define HS422_SERVO_MAX 0.002100  // 2100us
 
 // Calibration 
 #define BUFFER_SIZE 15
@@ -131,8 +137,8 @@ void info() {
 void setServo() {
   Serial.print("Set Servo: ");
   int number = readInt(1);
-  if (number > 11) {
-    number = 11;
+  if (number > 15) {
+    number = 15;
   }
   cal_servo = number;
   Serial.println(number);

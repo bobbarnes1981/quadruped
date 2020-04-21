@@ -19,7 +19,7 @@ namespace Calibration
             ports = SerialPort.GetPortNames();
 
             comboBoxPort.DataSource = ports;
-            comboBoxServo.DataSource = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+            comboBoxServo.DataSource = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
         }
 
         private string[] readLines()
@@ -72,8 +72,8 @@ namespace Calibration
             if (port == null)
             {
                 port = new SerialPort((string)comboBoxPort.SelectedValue, 9600);
-                port.ReadTimeout = 1000;
-                port.WriteTimeout = 1000;
+                port.ReadTimeout = 5000;
+                port.WriteTimeout = 5000;
                 try
                 {
                     port.Open();
