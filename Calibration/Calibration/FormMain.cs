@@ -5,13 +5,13 @@ using System.Windows.Forms;
 
 namespace Calibration
 {
-    public partial class Form1 : Form
+    public partial class FormMain : Form
     {
         private string[] ports;
 
         private SerialPort port;
 
-        public Form1()
+        public FormMain()
         {
             InitializeComponent();
 
@@ -19,23 +19,6 @@ namespace Calibration
 
             comboBoxPort.DataSource = ports;
             comboBoxServo.DataSource = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            SerialPort port = new SerialPort("COM3");
-            //port.DataReceived += Port_DataReceived;
-            port.Open();
-
-            port.WriteLine("i");
-
-            port.WriteLine("s0");
-            port.WriteLine("n600");
-            port.WriteLine("x2300");
-            port.WriteLine("g90");
-            System.Threading.Thread.Sleep(1000);
-            port.WriteLine("t");
-            port.Close();
         }
 
         private void Port_DataReceived(object sender, SerialDataReceivedEventArgs e)

@@ -1,6 +1,6 @@
 ﻿namespace Calibration
 {
-    partial class Form1
+    partial class FormMain
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
             this.comboBoxServo = new System.Windows.Forms.ComboBox();
             this.numericUpDownMin = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownMax = new System.Windows.Forms.NumericUpDown();
@@ -38,25 +37,24 @@
             this.buttonGo = new System.Windows.Forms.Button();
             this.textBoxAngle = new System.Windows.Forms.TextBox();
             this.buttonTest = new System.Windows.Forms.Button();
+            this.groupBoxConnection = new System.Windows.Forms.GroupBox();
+            this.groupBoxCalibration = new System.Windows.Forms.GroupBox();
+            this.labelServo = new System.Windows.Forms.Label();
+            this.labelMinPulse = new System.Windows.Forms.Label();
+            this.labelMaxPulse = new System.Windows.Forms.Label();
+            this.labelAngle = new System.Windows.Forms.Label();
+            this.textBoxOutput = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMax)).BeginInit();
+            this.groupBoxConnection.SuspendLayout();
+            this.groupBoxCalibration.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(428, 256);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // comboBoxServo
             // 
             this.comboBoxServo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxServo.FormattingEnabled = true;
-            this.comboBoxServo.Location = new System.Drawing.Point(13, 88);
+            this.comboBoxServo.Location = new System.Drawing.Point(87, 19);
             this.comboBoxServo.Name = "comboBoxServo";
             this.comboBoxServo.Size = new System.Drawing.Size(121, 21);
             this.comboBoxServo.TabIndex = 1;
@@ -70,7 +68,7 @@
             0,
             0,
             327680});
-            this.numericUpDownMin.Location = new System.Drawing.Point(13, 130);
+            this.numericUpDownMin.Location = new System.Drawing.Point(88, 46);
             this.numericUpDownMin.Name = "numericUpDownMin";
             this.numericUpDownMin.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownMin.TabIndex = 2;
@@ -84,7 +82,7 @@
             0,
             0,
             327680});
-            this.numericUpDownMax.Location = new System.Drawing.Point(13, 167);
+            this.numericUpDownMax.Location = new System.Drawing.Point(88, 72);
             this.numericUpDownMax.Name = "numericUpDownMax";
             this.numericUpDownMax.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownMax.TabIndex = 3;
@@ -94,14 +92,14 @@
             // 
             this.comboBoxPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPort.FormattingEnabled = true;
-            this.comboBoxPort.Location = new System.Drawing.Point(13, 13);
+            this.comboBoxPort.Location = new System.Drawing.Point(6, 21);
             this.comboBoxPort.Name = "comboBoxPort";
             this.comboBoxPort.Size = new System.Drawing.Size(121, 21);
             this.comboBoxPort.TabIndex = 4;
             // 
             // buttonConnect
             // 
-            this.buttonConnect.Location = new System.Drawing.Point(140, 11);
+            this.buttonConnect.Location = new System.Drawing.Point(133, 19);
             this.buttonConnect.Name = "buttonConnect";
             this.buttonConnect.Size = new System.Drawing.Size(75, 23);
             this.buttonConnect.TabIndex = 5;
@@ -112,7 +110,7 @@
             // buttonClose
             // 
             this.buttonClose.Enabled = false;
-            this.buttonClose.Location = new System.Drawing.Point(221, 11);
+            this.buttonClose.Location = new System.Drawing.Point(214, 19);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(75, 23);
             this.buttonClose.TabIndex = 6;
@@ -122,7 +120,7 @@
             // 
             // buttonGo
             // 
-            this.buttonGo.Location = new System.Drawing.Point(140, 200);
+            this.buttonGo.Location = new System.Drawing.Point(214, 96);
             this.buttonGo.Name = "buttonGo";
             this.buttonGo.Size = new System.Drawing.Size(75, 23);
             this.buttonGo.TabIndex = 7;
@@ -132,14 +130,14 @@
             // 
             // textBoxAngle
             // 
-            this.textBoxAngle.Location = new System.Drawing.Point(13, 202);
+            this.textBoxAngle.Location = new System.Drawing.Point(88, 98);
             this.textBoxAngle.Name = "textBoxAngle";
-            this.textBoxAngle.Size = new System.Drawing.Size(100, 20);
+            this.textBoxAngle.Size = new System.Drawing.Size(120, 20);
             this.textBoxAngle.TabIndex = 8;
             // 
             // buttonTest
             // 
-            this.buttonTest.Location = new System.Drawing.Point(37, 239);
+            this.buttonTest.Location = new System.Drawing.Point(214, 125);
             this.buttonTest.Name = "buttonTest";
             this.buttonTest.Size = new System.Drawing.Size(75, 23);
             this.buttonTest.TabIndex = 9;
@@ -147,33 +145,102 @@
             this.buttonTest.UseVisualStyleBackColor = true;
             this.buttonTest.Click += new System.EventHandler(this.buttonTest_Click);
             // 
-            // Form1
+            // groupBoxConnection
+            // 
+            this.groupBoxConnection.Controls.Add(this.comboBoxPort);
+            this.groupBoxConnection.Controls.Add(this.buttonConnect);
+            this.groupBoxConnection.Controls.Add(this.buttonClose);
+            this.groupBoxConnection.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxConnection.Name = "groupBoxConnection";
+            this.groupBoxConnection.Size = new System.Drawing.Size(296, 55);
+            this.groupBoxConnection.TabIndex = 10;
+            this.groupBoxConnection.TabStop = false;
+            this.groupBoxConnection.Text = "Connection";
+            // 
+            // groupBoxCalibration
+            // 
+            this.groupBoxCalibration.Controls.Add(this.labelAngle);
+            this.groupBoxCalibration.Controls.Add(this.labelMaxPulse);
+            this.groupBoxCalibration.Controls.Add(this.buttonTest);
+            this.groupBoxCalibration.Controls.Add(this.labelMinPulse);
+            this.groupBoxCalibration.Controls.Add(this.labelServo);
+            this.groupBoxCalibration.Controls.Add(this.buttonGo);
+            this.groupBoxCalibration.Controls.Add(this.textBoxAngle);
+            this.groupBoxCalibration.Controls.Add(this.comboBoxServo);
+            this.groupBoxCalibration.Controls.Add(this.numericUpDownMin);
+            this.groupBoxCalibration.Controls.Add(this.numericUpDownMax);
+            this.groupBoxCalibration.Location = new System.Drawing.Point(12, 73);
+            this.groupBoxCalibration.Name = "groupBoxCalibration";
+            this.groupBoxCalibration.Size = new System.Drawing.Size(296, 157);
+            this.groupBoxCalibration.TabIndex = 11;
+            this.groupBoxCalibration.TabStop = false;
+            this.groupBoxCalibration.Text = "groupBoxCalibration";
+            // 
+            // labelServo
+            // 
+            this.labelServo.AutoSize = true;
+            this.labelServo.Location = new System.Drawing.Point(6, 22);
+            this.labelServo.Name = "labelServo";
+            this.labelServo.Size = new System.Drawing.Size(35, 13);
+            this.labelServo.TabIndex = 2;
+            this.labelServo.Text = "Servo";
+            // 
+            // labelMinPulse
+            // 
+            this.labelMinPulse.AutoSize = true;
+            this.labelMinPulse.Location = new System.Drawing.Point(6, 48);
+            this.labelMinPulse.Name = "labelMinPulse";
+            this.labelMinPulse.Size = new System.Drawing.Size(53, 13);
+            this.labelMinPulse.TabIndex = 3;
+            this.labelMinPulse.Text = "Min Pulse";
+            // 
+            // labelMaxPulse
+            // 
+            this.labelMaxPulse.AutoSize = true;
+            this.labelMaxPulse.Location = new System.Drawing.Point(6, 74);
+            this.labelMaxPulse.Name = "labelMaxPulse";
+            this.labelMaxPulse.Size = new System.Drawing.Size(56, 13);
+            this.labelMaxPulse.TabIndex = 4;
+            this.labelMaxPulse.Text = "Max Pulse";
+            // 
+            // labelAngle
+            // 
+            this.labelAngle.AutoSize = true;
+            this.labelAngle.Location = new System.Drawing.Point(6, 101);
+            this.labelAngle.Name = "labelAngle";
+            this.labelAngle.Size = new System.Drawing.Size(34, 13);
+            this.labelAngle.TabIndex = 9;
+            this.labelAngle.Text = "Angle";
+            // 
+            // textBoxOutput
+            // 
+            this.textBoxOutput.Location = new System.Drawing.Point(13, 237);
+            this.textBoxOutput.Multiline = true;
+            this.textBoxOutput.Name = "textBoxOutput";
+            this.textBoxOutput.Size = new System.Drawing.Size(295, 168);
+            this.textBoxOutput.TabIndex = 12;
+            // 
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.buttonTest);
-            this.Controls.Add(this.textBoxAngle);
-            this.Controls.Add(this.buttonGo);
-            this.Controls.Add(this.buttonClose);
-            this.Controls.Add(this.buttonConnect);
-            this.Controls.Add(this.comboBoxPort);
-            this.Controls.Add(this.numericUpDownMax);
-            this.Controls.Add(this.numericUpDownMin);
-            this.Controls.Add(this.comboBoxServo);
-            this.Controls.Add(this.button1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.ClientSize = new System.Drawing.Size(322, 420);
+            this.Controls.Add(this.textBoxOutput);
+            this.Controls.Add(this.groupBoxCalibration);
+            this.Controls.Add(this.groupBoxConnection);
+            this.Name = "FormMain";
+            this.Text = "Calibration";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMax)).EndInit();
+            this.groupBoxConnection.ResumeLayout(false);
+            this.groupBoxCalibration.ResumeLayout(false);
+            this.groupBoxCalibration.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ComboBox comboBoxServo;
         private System.Windows.Forms.NumericUpDown numericUpDownMin;
         private System.Windows.Forms.NumericUpDown numericUpDownMax;
@@ -183,6 +250,13 @@
         private System.Windows.Forms.Button buttonGo;
         private System.Windows.Forms.TextBox textBoxAngle;
         private System.Windows.Forms.Button buttonTest;
+        private System.Windows.Forms.GroupBox groupBoxConnection;
+        private System.Windows.Forms.GroupBox groupBoxCalibration;
+        private System.Windows.Forms.Label labelAngle;
+        private System.Windows.Forms.Label labelMaxPulse;
+        private System.Windows.Forms.Label labelMinPulse;
+        private System.Windows.Forms.Label labelServo;
+        private System.Windows.Forms.TextBox textBoxOutput;
     }
 }
 
