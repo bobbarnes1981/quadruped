@@ -158,7 +158,7 @@ void test() {
   Serial.println("test");
   pwm.setPWM(cal_servo, 0, degToPulse(0, cal_min, cal_max));
   delay(250);
-  for (int deg = 0; deg < 180; deg += 10) {
+  for (int deg = 0; deg <= 180; deg += 10) {
     pwm.setPWM(cal_servo, 0, degToPulse(deg, cal_min, cal_max));
     Serial.println(deg);
     delay(20);
