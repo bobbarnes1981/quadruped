@@ -71,7 +71,9 @@ namespace Calibration
         {
             if (port == null)
             {
-                port = new SerialPort((string)comboBoxPort.SelectedValue);
+                port = new SerialPort((string)comboBoxPort.SelectedValue, 9600);
+                port.ReadTimeout = 1000;
+                port.WriteTimeout = 1000;
                 try
                 {
                     port.Open();
