@@ -6,19 +6,24 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 #define SERVO_FREQ 50       // Analog servos run at ~50 Hz updates
 #define SERVO_CYCLE 0.02    // 50Hz is 0.02s cycle
 #define SERVO_STEP 4096     // 4096 descrete steps
+#define OSC_FREQ 26660574   // measured using arduino nano with pulseIn
 
 // TODO: calibrate controller oscillator then calibrate servos separately
 
 // HS311
-#define HS311_SERVO_MIN 0.000600  //  600us
-#define HS311_SERVO_MAX 0.002300  // 2300us
+// 575-2460μsec
+// .107deg / us
+#define HS311_SERVO_MIN 0.000900  //  900us
+#define HS311_SERVO_MAX 0.002100  // 2100us
 
 // HS645MG
+// 553-2520μsec
+// .100deg / us
 #define HS645_SERVO_MIN 0.000900  //  900us
 #define HS645_SERVO_MAX 0.002100  // 2100us
 
 // HS422
-#define HS422_SERVO_MIN 0.000600  //  900us
+#define HS422_SERVO_MIN 0.000900  //  900us
 #define HS422_SERVO_MAX 0.002100  // 2100us
 
 // Calibration 
