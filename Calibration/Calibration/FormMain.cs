@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
 using System.Windows.Forms;
@@ -21,23 +22,37 @@ namespace Calibration
             comboBoxServo.DataSource = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
         }
 
-        private void Port_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        private string[] readLines()
         {
-            System.Diagnostics.Debug.WriteLine(e);
+            List<string> lines = new List<string>();
+            System.Threading.Thread.Sleep(500);
+            while (port.BytesToRead > 0)
+            {
+                string line = port.ReadLine();
+                lines.Add(line);
+                appendLine(line);
+                System.Threading.Thread.Sleep(100);
+            }
+            return lines.ToArray();
+        }
+
+        private void appendLine(string text)
+        {
+            textBoxOutput.AppendText(text);
+            textBoxOutput.AppendText("\r\n");
         }
 
         private void readInfo()
         {
             port.WriteLine("i");
-            System.Threading.Thread.Sleep(500);
-            while(port.BytesToRead > 0)
+            string[] lines = readLines();
+            foreach (var line in lines)
             {
-                string d = port.ReadLine();
-                string[] parts = d.Split(':');
+                string[] parts = line.Split(':');
                 switch (parts[0])
                 {
                     case "servo":
-                        comboBoxServo.SelectedItem = parts[1];
+                        comboBoxServo.SelectedItem = int.Parse(parts[1].Trim());
                         break;
                     case "min":
                         numericUpDownMin.Value = decimal.Parse(parts[1]);
@@ -46,7 +61,7 @@ namespace Calibration
                         numericUpDownMax.Value = decimal.Parse(parts[1]);
                         break;
                     default:
-                        MessageBox.Show(d);
+                        MessageBox.Show(line);
                         break;
                 }
             }
@@ -60,7 +75,10 @@ namespace Calibration
                 try
                 {
                     port.Open();
+                    readLines();
+
                     readInfo();
+
                     buttonClose.Enabled = true;
                     buttonConnect.Enabled = false;
                 }
@@ -85,31 +103,25 @@ namespace Calibration
         private void numericUpDownMin_ValueChanged(object sender, EventArgs e)
         {
             port.WriteLine($"n{(int)(numericUpDownMin.Value * 1000000)}");
-            System.Threading.Thread.Sleep(500);
-            while (port.BytesToRead > 0)
-            {
-                MessageBox.Show(port.ReadLine());
-            }
+            readLines();
         }
 
         private void numericUpDownMax_ValueChanged(object sender, EventArgs e)
         {
             port.WriteLine($"x{(int)(numericUpDownMax.Value * 1000000)}");
-            System.Threading.Thread.Sleep(500);
-            while (port.BytesToRead > 0)
-            {
-                MessageBox.Show(port.ReadLine());
-            }
+            readLines();
         }
 
         private void buttonGo_Click(object sender, EventArgs e)
         {
-
+            port.WriteLine($"g{int.Parse(textBoxAngle.Text)}");
+            readLines();
         }
 
         private void buttonTest_Click(object sender, EventArgs e)
         {
             port.WriteLine("t");
+            readLines();
         }
 
         private void comboBoxServo_SelectedValueChanged(object sender, EventArgs e)
@@ -117,6 +129,7 @@ namespace Calibration
             if (port != null)
             {
                 port.WriteLine($"s{(int)comboBoxServo.SelectedValue}");
+                readLines();
             }
         }
     }
