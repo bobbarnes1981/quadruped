@@ -39,11 +39,14 @@
             this.buttonTest = new System.Windows.Forms.Button();
             this.groupBoxConnection = new System.Windows.Forms.GroupBox();
             this.groupBoxCalibration = new System.Windows.Forms.GroupBox();
-            this.labelServo = new System.Windows.Forms.Label();
-            this.labelMinPulse = new System.Windows.Forms.Label();
-            this.labelMaxPulse = new System.Windows.Forms.Label();
             this.labelAngle = new System.Windows.Forms.Label();
+            this.labelMaxPulse = new System.Windows.Forms.Label();
+            this.labelMinPulse = new System.Windows.Forms.Label();
+            this.labelServo = new System.Windows.Forms.Label();
             this.textBoxOutput = new System.Windows.Forms.TextBox();
+            this.buttonGoPulse = new System.Windows.Forms.Button();
+            this.textBoxPulse = new System.Windows.Forms.TextBox();
+            this.labelPulse = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMax)).BeginInit();
             this.groupBoxConnection.SuspendLayout();
@@ -137,7 +140,7 @@
             // 
             // buttonTest
             // 
-            this.buttonTest.Location = new System.Drawing.Point(214, 125);
+            this.buttonTest.Location = new System.Drawing.Point(214, 154);
             this.buttonTest.Name = "buttonTest";
             this.buttonTest.Size = new System.Drawing.Size(75, 23);
             this.buttonTest.TabIndex = 9;
@@ -159,6 +162,9 @@
             // 
             // groupBoxCalibration
             // 
+            this.groupBoxCalibration.Controls.Add(this.labelPulse);
+            this.groupBoxCalibration.Controls.Add(this.textBoxPulse);
+            this.groupBoxCalibration.Controls.Add(this.buttonGoPulse);
             this.groupBoxCalibration.Controls.Add(this.labelAngle);
             this.groupBoxCalibration.Controls.Add(this.labelMaxPulse);
             this.groupBoxCalibration.Controls.Add(this.buttonTest);
@@ -171,37 +177,10 @@
             this.groupBoxCalibration.Controls.Add(this.numericUpDownMax);
             this.groupBoxCalibration.Location = new System.Drawing.Point(12, 73);
             this.groupBoxCalibration.Name = "groupBoxCalibration";
-            this.groupBoxCalibration.Size = new System.Drawing.Size(296, 157);
+            this.groupBoxCalibration.Size = new System.Drawing.Size(296, 189);
             this.groupBoxCalibration.TabIndex = 11;
             this.groupBoxCalibration.TabStop = false;
             this.groupBoxCalibration.Text = "groupBoxCalibration";
-            // 
-            // labelServo
-            // 
-            this.labelServo.AutoSize = true;
-            this.labelServo.Location = new System.Drawing.Point(6, 22);
-            this.labelServo.Name = "labelServo";
-            this.labelServo.Size = new System.Drawing.Size(35, 13);
-            this.labelServo.TabIndex = 2;
-            this.labelServo.Text = "Servo";
-            // 
-            // labelMinPulse
-            // 
-            this.labelMinPulse.AutoSize = true;
-            this.labelMinPulse.Location = new System.Drawing.Point(6, 48);
-            this.labelMinPulse.Name = "labelMinPulse";
-            this.labelMinPulse.Size = new System.Drawing.Size(53, 13);
-            this.labelMinPulse.TabIndex = 3;
-            this.labelMinPulse.Text = "Min Pulse";
-            // 
-            // labelMaxPulse
-            // 
-            this.labelMaxPulse.AutoSize = true;
-            this.labelMaxPulse.Location = new System.Drawing.Point(6, 74);
-            this.labelMaxPulse.Name = "labelMaxPulse";
-            this.labelMaxPulse.Size = new System.Drawing.Size(56, 13);
-            this.labelMaxPulse.TabIndex = 4;
-            this.labelMaxPulse.Text = "Max Pulse";
             // 
             // labelAngle
             // 
@@ -212,20 +191,73 @@
             this.labelAngle.TabIndex = 9;
             this.labelAngle.Text = "Angle";
             // 
+            // labelMaxPulse
+            // 
+            this.labelMaxPulse.AutoSize = true;
+            this.labelMaxPulse.Location = new System.Drawing.Point(6, 74);
+            this.labelMaxPulse.Name = "labelMaxPulse";
+            this.labelMaxPulse.Size = new System.Drawing.Size(56, 13);
+            this.labelMaxPulse.TabIndex = 4;
+            this.labelMaxPulse.Text = "Max Pulse";
+            // 
+            // labelMinPulse
+            // 
+            this.labelMinPulse.AutoSize = true;
+            this.labelMinPulse.Location = new System.Drawing.Point(6, 48);
+            this.labelMinPulse.Name = "labelMinPulse";
+            this.labelMinPulse.Size = new System.Drawing.Size(53, 13);
+            this.labelMinPulse.TabIndex = 3;
+            this.labelMinPulse.Text = "Min Pulse";
+            // 
+            // labelServo
+            // 
+            this.labelServo.AutoSize = true;
+            this.labelServo.Location = new System.Drawing.Point(6, 22);
+            this.labelServo.Name = "labelServo";
+            this.labelServo.Size = new System.Drawing.Size(35, 13);
+            this.labelServo.TabIndex = 2;
+            this.labelServo.Text = "Servo";
+            // 
             // textBoxOutput
             // 
-            this.textBoxOutput.Location = new System.Drawing.Point(13, 237);
+            this.textBoxOutput.Location = new System.Drawing.Point(12, 268);
             this.textBoxOutput.Multiline = true;
             this.textBoxOutput.Name = "textBoxOutput";
             this.textBoxOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxOutput.Size = new System.Drawing.Size(295, 168);
+            this.textBoxOutput.Size = new System.Drawing.Size(295, 160);
             this.textBoxOutput.TabIndex = 12;
+            // 
+            // buttonGoPulse
+            // 
+            this.buttonGoPulse.Location = new System.Drawing.Point(214, 125);
+            this.buttonGoPulse.Name = "buttonGoPulse";
+            this.buttonGoPulse.Size = new System.Drawing.Size(75, 23);
+            this.buttonGoPulse.TabIndex = 10;
+            this.buttonGoPulse.Text = "Go";
+            this.buttonGoPulse.UseVisualStyleBackColor = true;
+            this.buttonGoPulse.Click += new System.EventHandler(this.buttonGoPulse_Click);
+            // 
+            // textBoxPulse
+            // 
+            this.textBoxPulse.Location = new System.Drawing.Point(88, 127);
+            this.textBoxPulse.Name = "textBoxPulse";
+            this.textBoxPulse.Size = new System.Drawing.Size(120, 20);
+            this.textBoxPulse.TabIndex = 11;
+            // 
+            // labelPulse
+            // 
+            this.labelPulse.AutoSize = true;
+            this.labelPulse.Location = new System.Drawing.Point(6, 130);
+            this.labelPulse.Name = "labelPulse";
+            this.labelPulse.Size = new System.Drawing.Size(33, 13);
+            this.labelPulse.TabIndex = 12;
+            this.labelPulse.Text = "Pulse";
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(322, 420);
+            this.ClientSize = new System.Drawing.Size(322, 440);
             this.Controls.Add(this.textBoxOutput);
             this.Controls.Add(this.groupBoxCalibration);
             this.Controls.Add(this.groupBoxConnection);
@@ -258,6 +290,9 @@
         private System.Windows.Forms.Label labelMinPulse;
         private System.Windows.Forms.Label labelServo;
         private System.Windows.Forms.TextBox textBoxOutput;
+        private System.Windows.Forms.Label labelPulse;
+        private System.Windows.Forms.TextBox textBoxPulse;
+        private System.Windows.Forms.Button buttonGoPulse;
     }
 }
 

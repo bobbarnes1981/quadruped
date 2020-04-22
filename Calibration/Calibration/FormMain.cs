@@ -16,6 +16,8 @@ namespace Calibration
         {
             InitializeComponent();
 
+
+
             ports = SerialPort.GetPortNames();
 
             comboBoxPort.DataSource = ports;
@@ -77,7 +79,7 @@ namespace Calibration
                 try
                 {
                     port.Open();
-                    readLines();
+                    //readLines();
 
                     readInfo();
 
@@ -133,6 +135,12 @@ namespace Calibration
                 port.WriteLine($"s{(int)comboBoxServo.SelectedValue}");
                 readLines();
             }
+        }
+
+        private void buttonGoPulse_Click(object sender, EventArgs e)
+        {
+            port.WriteLine($"p{int.Parse(textBoxPulse.Text)}");
+            readLines();
         }
     }
 }

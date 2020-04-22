@@ -1,0 +1,3 @@
+#include "Quadruped.h"
+
+// TODO: allow commands for walk, etc...
