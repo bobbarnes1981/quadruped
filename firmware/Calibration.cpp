@@ -136,9 +136,12 @@ void Calibration::goDegrees() {
 
 void Calibration::goPulse() {
   Serial.print("PWM: ");
-  double pulse = readInt(1) / 1000000.0;
+  double pulse = readInt(1);
   Serial.println(pulse);
+  pulse = pulse / 1000000.0;
+  Serial.println(pulse, 6);
   pulse = pulse / ( 0.02 / 4096 );
+  Serial.println(pulse);
   pwm->setPWM(this->currentServo, 0, pulse);
   Serial.println("done");
 }
