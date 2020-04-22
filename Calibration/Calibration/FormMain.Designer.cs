@@ -36,21 +36,22 @@
             this.buttonClose = new System.Windows.Forms.Button();
             this.buttonGo = new System.Windows.Forms.Button();
             this.textBoxAngle = new System.Windows.Forms.TextBox();
-            this.buttonTest = new System.Windows.Forms.Button();
             this.groupBoxConnection = new System.Windows.Forms.GroupBox();
             this.groupBoxCalibration = new System.Windows.Forms.GroupBox();
+            this.trackBarPulse = new System.Windows.Forms.TrackBar();
+            this.labelPulse = new System.Windows.Forms.Label();
+            this.textBoxPulse = new System.Windows.Forms.TextBox();
+            this.buttonGoPulse = new System.Windows.Forms.Button();
             this.labelAngle = new System.Windows.Forms.Label();
             this.labelMaxPulse = new System.Windows.Forms.Label();
             this.labelMinPulse = new System.Windows.Forms.Label();
             this.labelServo = new System.Windows.Forms.Label();
             this.textBoxOutput = new System.Windows.Forms.TextBox();
-            this.buttonGoPulse = new System.Windows.Forms.Button();
-            this.textBoxPulse = new System.Windows.Forms.TextBox();
-            this.labelPulse = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMax)).BeginInit();
             this.groupBoxConnection.SuspendLayout();
             this.groupBoxCalibration.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarPulse)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBoxServo
@@ -138,16 +139,6 @@
             this.textBoxAngle.Size = new System.Drawing.Size(120, 20);
             this.textBoxAngle.TabIndex = 8;
             // 
-            // buttonTest
-            // 
-            this.buttonTest.Location = new System.Drawing.Point(214, 154);
-            this.buttonTest.Name = "buttonTest";
-            this.buttonTest.Size = new System.Drawing.Size(75, 23);
-            this.buttonTest.TabIndex = 9;
-            this.buttonTest.Text = "Test";
-            this.buttonTest.UseVisualStyleBackColor = true;
-            this.buttonTest.Click += new System.EventHandler(this.buttonTest_Click);
-            // 
             // groupBoxConnection
             // 
             this.groupBoxConnection.Controls.Add(this.comboBoxPort);
@@ -162,12 +153,12 @@
             // 
             // groupBoxCalibration
             // 
+            this.groupBoxCalibration.Controls.Add(this.trackBarPulse);
             this.groupBoxCalibration.Controls.Add(this.labelPulse);
             this.groupBoxCalibration.Controls.Add(this.textBoxPulse);
             this.groupBoxCalibration.Controls.Add(this.buttonGoPulse);
             this.groupBoxCalibration.Controls.Add(this.labelAngle);
             this.groupBoxCalibration.Controls.Add(this.labelMaxPulse);
-            this.groupBoxCalibration.Controls.Add(this.buttonTest);
             this.groupBoxCalibration.Controls.Add(this.labelMinPulse);
             this.groupBoxCalibration.Controls.Add(this.labelServo);
             this.groupBoxCalibration.Controls.Add(this.buttonGo);
@@ -177,10 +168,48 @@
             this.groupBoxCalibration.Controls.Add(this.numericUpDownMax);
             this.groupBoxCalibration.Location = new System.Drawing.Point(12, 73);
             this.groupBoxCalibration.Name = "groupBoxCalibration";
-            this.groupBoxCalibration.Size = new System.Drawing.Size(296, 189);
+            this.groupBoxCalibration.Size = new System.Drawing.Size(296, 232);
             this.groupBoxCalibration.TabIndex = 11;
             this.groupBoxCalibration.TabStop = false;
             this.groupBoxCalibration.Text = "groupBoxCalibration";
+            // 
+            // trackBarPulse
+            // 
+            this.trackBarPulse.Location = new System.Drawing.Point(6, 167);
+            this.trackBarPulse.Maximum = 250;
+            this.trackBarPulse.Minimum = 50;
+            this.trackBarPulse.Name = "trackBarPulse";
+            this.trackBarPulse.Size = new System.Drawing.Size(283, 45);
+            this.trackBarPulse.TabIndex = 13;
+            this.trackBarPulse.TickFrequency = 10;
+            this.trackBarPulse.Value = 150;
+            this.trackBarPulse.ValueChanged += new System.EventHandler(this.trackBarPulse_ValueChanged);
+            // 
+            // labelPulse
+            // 
+            this.labelPulse.AutoSize = true;
+            this.labelPulse.Location = new System.Drawing.Point(6, 130);
+            this.labelPulse.Name = "labelPulse";
+            this.labelPulse.Size = new System.Drawing.Size(33, 13);
+            this.labelPulse.TabIndex = 12;
+            this.labelPulse.Text = "Pulse";
+            // 
+            // textBoxPulse
+            // 
+            this.textBoxPulse.Location = new System.Drawing.Point(88, 127);
+            this.textBoxPulse.Name = "textBoxPulse";
+            this.textBoxPulse.Size = new System.Drawing.Size(120, 20);
+            this.textBoxPulse.TabIndex = 11;
+            // 
+            // buttonGoPulse
+            // 
+            this.buttonGoPulse.Location = new System.Drawing.Point(214, 125);
+            this.buttonGoPulse.Name = "buttonGoPulse";
+            this.buttonGoPulse.Size = new System.Drawing.Size(75, 23);
+            this.buttonGoPulse.TabIndex = 10;
+            this.buttonGoPulse.Text = "Go";
+            this.buttonGoPulse.UseVisualStyleBackColor = true;
+            this.buttonGoPulse.Click += new System.EventHandler(this.buttonGoPulse_Click);
             // 
             // labelAngle
             // 
@@ -220,44 +249,18 @@
             // 
             // textBoxOutput
             // 
-            this.textBoxOutput.Location = new System.Drawing.Point(12, 268);
+            this.textBoxOutput.Location = new System.Drawing.Point(12, 311);
             this.textBoxOutput.Multiline = true;
             this.textBoxOutput.Name = "textBoxOutput";
             this.textBoxOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxOutput.Size = new System.Drawing.Size(295, 160);
             this.textBoxOutput.TabIndex = 12;
             // 
-            // buttonGoPulse
-            // 
-            this.buttonGoPulse.Location = new System.Drawing.Point(214, 125);
-            this.buttonGoPulse.Name = "buttonGoPulse";
-            this.buttonGoPulse.Size = new System.Drawing.Size(75, 23);
-            this.buttonGoPulse.TabIndex = 10;
-            this.buttonGoPulse.Text = "Go";
-            this.buttonGoPulse.UseVisualStyleBackColor = true;
-            this.buttonGoPulse.Click += new System.EventHandler(this.buttonGoPulse_Click);
-            // 
-            // textBoxPulse
-            // 
-            this.textBoxPulse.Location = new System.Drawing.Point(88, 127);
-            this.textBoxPulse.Name = "textBoxPulse";
-            this.textBoxPulse.Size = new System.Drawing.Size(120, 20);
-            this.textBoxPulse.TabIndex = 11;
-            // 
-            // labelPulse
-            // 
-            this.labelPulse.AutoSize = true;
-            this.labelPulse.Location = new System.Drawing.Point(6, 130);
-            this.labelPulse.Name = "labelPulse";
-            this.labelPulse.Size = new System.Drawing.Size(33, 13);
-            this.labelPulse.TabIndex = 12;
-            this.labelPulse.Text = "Pulse";
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(322, 440);
+            this.ClientSize = new System.Drawing.Size(322, 483);
             this.Controls.Add(this.textBoxOutput);
             this.Controls.Add(this.groupBoxCalibration);
             this.Controls.Add(this.groupBoxConnection);
@@ -268,6 +271,7 @@
             this.groupBoxConnection.ResumeLayout(false);
             this.groupBoxCalibration.ResumeLayout(false);
             this.groupBoxCalibration.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarPulse)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -282,7 +286,6 @@
         private System.Windows.Forms.Button buttonClose;
         private System.Windows.Forms.Button buttonGo;
         private System.Windows.Forms.TextBox textBoxAngle;
-        private System.Windows.Forms.Button buttonTest;
         private System.Windows.Forms.GroupBox groupBoxConnection;
         private System.Windows.Forms.GroupBox groupBoxCalibration;
         private System.Windows.Forms.Label labelAngle;
@@ -293,6 +296,7 @@
         private System.Windows.Forms.Label labelPulse;
         private System.Windows.Forms.TextBox textBoxPulse;
         private System.Windows.Forms.Button buttonGoPulse;
+        private System.Windows.Forms.TrackBar trackBarPulse;
     }
 }
 

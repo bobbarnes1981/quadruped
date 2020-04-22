@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Calibration
@@ -40,8 +41,18 @@ namespace Calibration
 
         private void appendLine(string text)
         {
-            textBoxOutput.AppendText(text);
-            textBoxOutput.AppendText("\r\n");
+            if (InvokeRequired)
+            {
+                Invoke((Action) delegate
+                {
+                    appendLine(text);
+                });
+            }
+            else
+            {
+                textBoxOutput.AppendText(text);
+                textBoxOutput.AppendText("\r\n");
+            }
         }
 
         private void readInfo()
@@ -122,18 +133,14 @@ namespace Calibration
             readLines();
         }
 
-        private void buttonTest_Click(object sender, EventArgs e)
-        {
-            port.WriteLine("t");
-            readLines();
-        }
-
         private void comboBoxServo_SelectedValueChanged(object sender, EventArgs e)
         {
             if (port != null)
             {
                 port.WriteLine($"s{(int)comboBoxServo.SelectedValue}");
                 readLines();
+
+                readInfo();
             }
         }
 
@@ -141,6 +148,16 @@ namespace Calibration
         {
             port.WriteLine($"p{int.Parse(textBoxPulse.Text)}");
             readLines();
+        }
+
+        private void trackBarPulse_ValueChanged(object sender, EventArgs e)
+        {
+            int pulse = int.Parse(((TrackBar)sender).Value.ToString()) * 10;
+            new Thread(() =>
+            {
+                port.WriteLine($"p{pulse}");
+                readLines();
+            }).Start();
         }
     }
 }
