@@ -17,6 +17,7 @@ class RobotServo {
     ~RobotServo();
     void pulse(double pulseLength);
     void angle(double angleDegrees);
+    double doubleMap(double x, double in_min, double in_max, double out_min, double out_max);
 };
 
 #endif

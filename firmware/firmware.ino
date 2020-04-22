@@ -38,21 +38,21 @@ Calibration calibration = Calibration(&pwm);
 
 // TODO: extend hip min/max to ~90degrees
 
-RobotServo servoRL_HIP = RobotServo(&pwm, RL_HIP, 1000, 1950, 1000, 1950); // FIXME
-RobotServo servoRL_THIGH = RobotServo(&pwm, RL_THIGH, 550, 2450, 1100, 2450);
-RobotServo servoRL_KNEE = RobotServo(&pwm, RL_KNEE, 700, 2600, 700, 2050);
+RobotServo servoRL_HIP = RobotServo(&pwm, RL_HIP, 0.001000, 0.001950, 0.001000, 0.001950); // FIXME
+RobotServo servoRL_THIGH = RobotServo(&pwm, RL_THIGH, 0.000550, 0.002450, 0.001100, 0.002450);
+RobotServo servoRL_KNEE = RobotServo(&pwm, RL_KNEE, 0.000700, 0.002600, 0.000700, 0.002050);
 
-RobotServo servoRR_HIP = RobotServo(&pwm, RR_HIP, 1100, 2050, 1100, 2050); // FIXME
-RobotServo servoRR_THIGH = RobotServo(&pwm, RR_THIGH, 600, 2500, 600, 1950);
-RobotServo servoRR_KNEE = RobotServo(&pwm, RR_KNEE, 450, 2350, 1000, 2350);
+RobotServo servoRR_HIP = RobotServo(&pwm, RR_HIP, 0.001100, 0.002050, 0.001100, 0.002050); // FIXME
+RobotServo servoRR_THIGH = RobotServo(&pwm, RR_THIGH, 0.000600, 0.002500, 0.000600, 0.001950);
+RobotServo servoRR_KNEE = RobotServo(&pwm, RR_KNEE, 0.000450, 0.002350, 0.001000, 0.002350);
 
-RobotServo servoFR_HIP = RobotServo(&pwm, FR_HIP, 1050, 1950, 1050, 1950); // FIXME
-RobotServo servoFR_THIGH = RobotServo(&pwm, FR_THIGH, 500, 2400, 1050, 2400);
-RobotServo servoFR_KNEE = RobotServo(&pwm, FR_KNEE, 800, 2600, 800, 2150);
+RobotServo servoFR_HIP = RobotServo(&pwm, FR_HIP, 0.001050, 0.001950, 0.001050, 0.001950); // FIXME
+RobotServo servoFR_THIGH = RobotServo(&pwm, FR_THIGH, 0.000500, 0.002400, 0.001050, 0.002400);
+RobotServo servoFR_KNEE = RobotServo(&pwm, FR_KNEE, 0.000800, 0.002600, 0.000800, 0.002150);
 
-RobotServo servoFL_HIP = RobotServo(&pwm, FL_HIP, 1100, 2000, 1100, 2000); // FIXME
-RobotServo servoFL_THIGH = RobotServo(&pwm, FL_THIGH, 600, 2500, 600, 1950);
-RobotServo servoFL_KNEE = RobotServo(&pwm, FL_KNEE, 400, 2350, 1000, 2350);
+RobotServo servoFL_HIP = RobotServo(&pwm, FL_HIP, 0.001100, 0.002000, 0.001100, 0.002000); // FIXME
+RobotServo servoFL_THIGH = RobotServo(&pwm, FL_THIGH, 0.000650, 0.002500, 0.000600, 0.001950);
+RobotServo servoFL_KNEE = RobotServo(&pwm, FL_KNEE, 0.000400, 0.002350, 0.001000, 0.002350);
 
 void setup() {
   Serial.begin(9600);
@@ -71,21 +71,21 @@ void setup() {
 
   int middle = 1500 / (0.02 / 4096);
   
-  servoRL_HIP.angle(0); delay(1000);
-  servoRL_THIGH.angle(0); delay(1000);
-  servoRL_KNEE.angle(0); delay(1000);
+  servoRL_HIP.angle(0); delay(500);
+  servoRL_THIGH.angle(90); delay(500);
+  servoRL_KNEE.angle(30); delay(500);
   
-  servoRR_HIP.angle(0); delay(1000);
-  servoRR_THIGH.angle(0); delay(1000);
-  servoRR_KNEE.angle(0); delay(1000);
+  servoRR_HIP.angle(0); delay(500);
+  servoRR_THIGH.angle(-90); delay(500);
+  servoRR_KNEE.angle(-30); delay(500);
 
-  servoFR_HIP.angle(0); delay(1000);
-  servoFR_THIGH.angle(0); delay(1000);
-  servoFR_KNEE.angle(0); delay(1000);
+  servoFR_HIP.angle(0); delay(500);
+  servoFR_THIGH.angle(90); delay(500);
+  servoFR_KNEE.angle(30); delay(500);
   
-  servoFL_HIP.angle(0); delay(1000);
-  servoFL_THIGH.angle(0); delay(1000);
-  servoFL_KNEE.angle(0); delay(1000);
+  servoFL_HIP.angle(0); delay(500);
+  servoFL_THIGH.angle(-90); delay(500);
+  servoFL_KNEE.angle(-30); delay(500);
 }
 
 void loop() {
