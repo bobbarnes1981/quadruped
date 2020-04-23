@@ -34,17 +34,33 @@ Calibration calibration = Calibration(&pwm);
 #define FL_THIGH 13
 #define FL_KNEE 14
 
+#define LENGTH_FEMUR 59.0
+#define LENGTH_TIBIA 122.0
+
 #include "RobotServo.h"
+#include "RobotLeg.h"
 
 // TODO: extend hip min/max to ~90degrees
 
 RobotServo servoRL_HIP = RobotServo(&pwm, RL_HIP, 0.001000, 0.001950, 0.001000, 0.001950); // FIXME
 RobotServo servoRL_THIGH = RobotServo(&pwm, RL_THIGH, 0.000550, 0.002450, 0.001100, 0.002450);
 RobotServo servoRL_KNEE = RobotServo(&pwm, RL_KNEE, 0.000700, 0.002600, 0.000700, 0.002050);
+RobotLeg legRL = RobotLeg(
+  LENGTH_FEMUR, LENGTH_TIBIA,
+  &servoRL_HIP,
+  &servoRL_THIGH,
+  &servoRL_KNEE
+);
 
 RobotServo servoRR_HIP = RobotServo(&pwm, RR_HIP, 0.001100, 0.002050, 0.001100, 0.002050); // FIXME
 RobotServo servoRR_THIGH = RobotServo(&pwm, RR_THIGH, 0.000600, 0.002500, 0.000600, 0.001950);
 RobotServo servoRR_KNEE = RobotServo(&pwm, RR_KNEE, 0.000450, 0.002350, 0.001000, 0.002350);
+RobotLeg legRR = RobotLeg(
+  LENGTH_FEMUR, LENGTH_TIBIA,
+  &servoRR_HIP,
+  &servoRR_THIGH,
+  &servoRR_KNEE
+);
 
 RobotServo servoFR_HIP = RobotServo(&pwm, FR_HIP, 0.001050, 0.001950, 0.001050, 0.001950); // FIXME
 RobotServo servoFR_THIGH = RobotServo(&pwm, FR_THIGH, 0.000500, 0.002400, 0.001050, 0.002400);
@@ -69,29 +85,40 @@ void setup() {
 
   //hip, thigh, knee
 
-  int middle = 1500 / (0.02 / 4096);
-  
-  servoRL_HIP.angle(0); delay(500);
-  servoRL_THIGH.angle(90); delay(500);
-  servoRL_KNEE.angle(30); delay(500);
-  
-  servoRR_HIP.angle(0); delay(500);
-  servoRR_THIGH.angle(-90); delay(500);
-  servoRR_KNEE.angle(-30); delay(500);
-
-  servoFR_HIP.angle(0); delay(500);
-  servoFR_THIGH.angle(90); delay(500);
-  servoFR_KNEE.angle(30); delay(500);
-  
-  servoFL_HIP.angle(0); delay(500);
-  servoFL_THIGH.angle(-90); delay(500);
-  servoFL_KNEE.angle(-30); delay(500);
+//  servoRL_HIP.angle(0); delay(500);
+//  servoRL_THIGH.angle(90); delay(500);
+//  servoRL_KNEE.angle(30); delay(500);
+//  
+//  servoRR_HIP.angle(0); delay(500);
+//  servoRR_THIGH.angle(-90); delay(500);
+//  servoRR_KNEE.angle(-30); delay(500);
+//
+//  servoFR_HIP.angle(0); delay(500);
+//  servoFR_THIGH.angle(90); delay(500);
+//  servoFR_KNEE.angle(30); delay(500);
+//  
+//  servoFL_HIP.angle(0); delay(500);
+//  servoFL_THIGH.angle(-90); delay(500);
+//  servoFL_KNEE.angle(-30); delay(500);
 }
+
+//unsigned long lastMillis;
 
 void loop() {
 
   // debugging
-  solve2DOF(150, -38);
+  // TODO: offset angle for centre...
+  //       hip -45?
+  //       thigh 0?
+  //       knee -90?
+  legRL.setPosition(150, 0, -38);
+//  unsigned long currentMillis = millis(); 
+//  unsigned long elapsedMillis = currentMillis - lastMillis;
+//  if (elapsedMillis >= 100) {
+//    solve2DOF(150, -38);
+//    Serial.println(elapsedMillis);
+//    lastMillis = currentMillis;
+//  }
   
   #ifdef CALIBRATION
   calibration.processCommand();
@@ -109,53 +136,4 @@ void loop() {
   servoFL_THIGH.angle(0);
   servoFL_KNEE.angle(-30);
   #endif
-}
-
-double ab_length = 59;
-double bc_length = 122;
-
-void solve3DOF(double tx, double ty, double tz) {
-  Serial.print("Servo0 angle: ");
-  Serial.println(radToDeg(atan(ty / tx)));
-
-  double AT = sqrt(pow(tx, 2) + pow(ty, 2));
-
-  solve2DOF(AT, tz);
-}
-
-void solve2DOF(double tx, double ty) {
-  double cx = tx;
-  double cy = ty;
-
-  double AC = sqrt(pow(cx, 2) + pow(cy, 2));
-  double ac_angle = radToDeg(atan(cy / cx));
-
-  //s=(AB+BC+AC)/2
-  double s = (ab_length + bc_length + AC) / 2;
-
-  //S=sqr(s*(s-AB)(s-BC)(s-AC))
-  double S = sqrt(s * (s - ab_length) * (s - bc_length) * (s - AC));
-
-  //A=asin(2S/(AB*AC))
-  double A = radToDeg(asin((2 * S) / (ab_length * AC)));
-
-  //B=asin(2S/(AB*BC))
-  double B = radToDeg(asin((2 * S) / (ab_length * bc_length)));
-
-  // Check if Hypoteneuse (AC) is big enough to mean triangle is obtuse
-  // as rule of sines doesn't work on obtuse angles, could use rule of
-  // cosines
-  if (AC > sqrt(pow(ab_length, 2) + pow(bc_length, 2))) {
-    B = 180 - B;
-  }
-
-  Serial.print("Servo1 angle: ");
-  Serial.println(ac_angle + A);
-
-  Serial.print("Servo2 angle: ");
-  Serial.println(B);
-}
-
-double radToDeg(double rad) {
-  return rad * (180 / PI);
 }

@@ -33,7 +33,7 @@ void RobotServo::pulse(double pulseLength) {
 }
 
 void RobotServo::angle(double angleDegrees) {
-  Serial.println(this->doubleMap(angleDegrees, -90, 90, this->minPulse, this->maxPulse));
+  Serial.println(this->doubleMap(angleDegrees, -90, 90, this->minPulse, this->maxPulse), 2);
   this->pulse(this->doubleMap(angleDegrees, -90, 90, this->minPulse, this->maxPulse));
 }
 
