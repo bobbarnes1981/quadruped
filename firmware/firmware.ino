@@ -89,6 +89,10 @@ void setup() {
 }
 
 void loop() {
+
+  // debugging
+  solve2DOF(150, -38);
+  
   #ifdef CALIBRATION
   calibration.processCommand();
   #else
@@ -105,4 +109,53 @@ void loop() {
   servoFL_THIGH.angle(0);
   servoFL_KNEE.angle(-30);
   #endif
+}
+
+double ab_length = 59;
+double bc_length = 122;
+
+void solve3DOF(double tx, double ty, double tz) {
+  Serial.print("Servo0 angle: ");
+  Serial.println(radToDeg(atan(ty / tx)));
+
+  double AT = sqrt(pow(tx, 2) + pow(ty, 2));
+
+  solve2DOF(AT, tz);
+}
+
+void solve2DOF(double tx, double ty) {
+  double cx = tx;
+  double cy = ty;
+
+  double AC = sqrt(pow(cx, 2) + pow(cy, 2));
+  double ac_angle = radToDeg(atan(cy / cx));
+
+  //s=(AB+BC+AC)/2
+  double s = (ab_length + bc_length + AC) / 2;
+
+  //S=sqr(s*(s-AB)(s-BC)(s-AC))
+  double S = sqrt(s * (s - ab_length) * (s - bc_length) * (s - AC));
+
+  //A=asin(2S/(AB*AC))
+  double A = radToDeg(asin((2 * S) / (ab_length * AC)));
+
+  //B=asin(2S/(AB*BC))
+  double B = radToDeg(asin((2 * S) / (ab_length * bc_length)));
+
+  // Check if Hypoteneuse (AC) is big enough to mean triangle is obtuse
+  // as rule of sines doesn't work on obtuse angles, could use rule of
+  // cosines
+  if (AC > sqrt(pow(ab_length, 2) + pow(bc_length, 2))) {
+    B = 180 - B;
+  }
+
+  Serial.print("Servo1 angle: ");
+  Serial.println(ac_angle + A);
+
+  Serial.print("Servo2 angle: ");
+  Serial.println(B);
+}
+
+double radToDeg(double rad) {
+  return rad * (180 / PI);
 }
