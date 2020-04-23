@@ -42,9 +42,9 @@ Calibration calibration = Calibration(&pwm);
 
 // TODO: extend hip min/max to ~90degrees
 
-RobotServo servoRL_HIP = RobotServo(&pwm, RL_HIP, 0.001000, 0.001950, 0.001000, 0.001950); // FIXME
-RobotServo servoRL_THIGH = RobotServo(&pwm, RL_THIGH, 0.000550, 0.002450, 0.001100, 0.002450);
-RobotServo servoRL_KNEE = RobotServo(&pwm, RL_KNEE, 0.000700, 0.002600, 0.000700, 0.002050);
+RobotServo servoRL_HIP = RobotServo(&pwm, RL_HIP, 0, 1, 0.001000, 0.001950, 0.001000, 0.001950); // FIXME
+RobotServo servoRL_THIGH = RobotServo(&pwm, RL_THIGH, 0, 1, 0.000550, 0.002450, 0.001100, 0.002450);
+RobotServo servoRL_KNEE = RobotServo(&pwm, RL_KNEE, 90, -1, 0.000700, 0.002600, 0.000700, 0.002050);
 RobotLeg legRL = RobotLeg(
   LENGTH_FEMUR, LENGTH_TIBIA,
   &servoRL_HIP,
@@ -52,9 +52,9 @@ RobotLeg legRL = RobotLeg(
   &servoRL_KNEE
 );
 
-RobotServo servoRR_HIP = RobotServo(&pwm, RR_HIP, 0.001100, 0.002050, 0.001100, 0.002050); // FIXME
-RobotServo servoRR_THIGH = RobotServo(&pwm, RR_THIGH, 0.000600, 0.002500, 0.000600, 0.001950);
-RobotServo servoRR_KNEE = RobotServo(&pwm, RR_KNEE, 0.000450, 0.002350, 0.001000, 0.002350);
+RobotServo servoRR_HIP = RobotServo(&pwm, RR_HIP, 0, 1, 0.001100, 0.002050, 0.001100, 0.002050); // FIXME
+RobotServo servoRR_THIGH = RobotServo(&pwm, RR_THIGH,0, -1, 0.000600, 0.002500, 0.000600, 0.001950);
+RobotServo servoRR_KNEE = RobotServo(&pwm, RR_KNEE, -90, 1, 0.000450, 0.002350, 0.001000, 0.002350);
 RobotLeg legRR = RobotLeg(
   LENGTH_FEMUR, LENGTH_TIBIA,
   &servoRR_HIP,
@@ -62,13 +62,25 @@ RobotLeg legRR = RobotLeg(
   &servoRR_KNEE
 );
 
-RobotServo servoFR_HIP = RobotServo(&pwm, FR_HIP, 0.001050, 0.001950, 0.001050, 0.001950); // FIXME
-RobotServo servoFR_THIGH = RobotServo(&pwm, FR_THIGH, 0.000500, 0.002400, 0.001050, 0.002400);
-RobotServo servoFR_KNEE = RobotServo(&pwm, FR_KNEE, 0.000800, 0.002600, 0.000800, 0.002150);
+RobotServo servoFR_HIP = RobotServo(&pwm, FR_HIP, 0, 1, 0.001050, 0.001950, 0.001050, 0.001950); // FIXME
+RobotServo servoFR_THIGH = RobotServo(&pwm, FR_THIGH, 0, 1, 0.000500, 0.002400, 0.001050, 0.002400);
+RobotServo servoFR_KNEE = RobotServo(&pwm, FR_KNEE, 90, -1, 0.000800, 0.002600, 0.000800, 0.002150);
+RobotLeg legFR = RobotLeg(
+  LENGTH_FEMUR, LENGTH_TIBIA,
+  &servoFR_HIP,
+  &servoFR_THIGH,
+  &servoFR_KNEE
+);
 
-RobotServo servoFL_HIP = RobotServo(&pwm, FL_HIP, 0.001100, 0.002000, 0.001100, 0.002000); // FIXME
-RobotServo servoFL_THIGH = RobotServo(&pwm, FL_THIGH, 0.000650, 0.002500, 0.000600, 0.001950);
-RobotServo servoFL_KNEE = RobotServo(&pwm, FL_KNEE, 0.000400, 0.002350, 0.001000, 0.002350);
+RobotServo servoFL_HIP = RobotServo(&pwm, FL_HIP, 0, 1, 0.001100, 0.002000, 0.001100, 0.002000); // FIXME
+RobotServo servoFL_THIGH = RobotServo(&pwm, FL_THIGH, 0, -1, 0.000650, 0.002500, 0.000600, 0.001950);
+RobotServo servoFL_KNEE = RobotServo(&pwm, FL_KNEE, -90, 1, 0.000400, 0.002350, 0.001000, 0.002350);
+RobotLeg legFL = RobotLeg(
+  LENGTH_FEMUR, LENGTH_TIBIA,
+  &servoFL_HIP,
+  &servoFL_THIGH,
+  &servoFL_KNEE
+);
 
 void setup() {
   Serial.begin(9600);
@@ -107,11 +119,33 @@ void setup() {
 void loop() {
 
   // debugging
-  // TODO: offset angle for centre...
-  //       hip -45?
-  //       thigh 0?
-  //       knee -90?
+
   legRL.setPosition(150, 0, -38);
+  legRR.setPosition(150, 0, -38);
+  legFR.setPosition(150, 0, -38);
+  legFL.setPosition(150, 0, -38);
+  delay(1000);
+  legRL.setPosition(150, 0, 0);
+  legRR.setPosition(150, 0, 0);
+  legFR.setPosition(150, 0, 0);
+  legFL.setPosition(150, 0, 0);
+  delay(1000);
+  legRL.setPosition(120, 0, -20);
+  legRR.setPosition(120, 0, -20);
+  legFR.setPosition(120, 0, -20);
+  legFL.setPosition(120, 0, -20);
+  delay(1000);
+  legRL.setPosition(120, 0, -50);
+  legRR.setPosition(120, 0, -50);
+  legFR.setPosition(120, 0, -50);
+  legFL.setPosition(120, 0, -50);
+  delay(5000);
+  legRL.setPosition(120, 0, -20);
+  legRR.setPosition(120, 0, -20);
+  legFR.setPosition(120, 0, -20);
+  legFL.setPosition(120, 0, -20);
+  delay(1000);
+  
 //  unsigned long currentMillis = millis(); 
 //  unsigned long elapsedMillis = currentMillis - lastMillis;
 //  if (elapsedMillis >= 100) {

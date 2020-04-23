@@ -54,14 +54,10 @@ void RobotLeg::solve2DOF(double tx, double ty) {
     B = 180 - B;
   }
 
-  Serial.print("thigh angle: ");
-  double thighAngle = ac_angle + A; // FIXME: offset ac_angle+A correct for RL
-  Serial.println(thighAngle);
+  double thighAngle = ac_angle + A;
   this->thigh->angle(thighAngle);
 
-  Serial.print("knee angle: ");
-  double kneeAngle = 90 - B; // FIXME: offset 90-B correct for RL
-  Serial.println(kneeAngle);
+  double kneeAngle = B;
   this->knee->angle(kneeAngle);
 }
 
