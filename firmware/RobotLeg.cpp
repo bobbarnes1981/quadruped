@@ -1,6 +1,6 @@
 #include "RobotLeg.h"
 
-// TODO: allow commands to move leg to specified xyz
+#define LEG_SPEED 10 // 10mm/s
 
 RobotLeg::RobotLeg(double lengthFemur, double lengthTibia, RobotServo *hip, RobotServo *thigh, RobotServo *knee) {
   this->lengthFemur = lengthFemur;
@@ -14,15 +14,23 @@ RobotLeg::~RobotLeg() {
   
 }
 
-// target x-side y-forward z-up
+// move the foot to the specified position immediately
+// target x=l/r y=f/b z=u/d
 void RobotLeg::setPosition(double x, double y, double z) {
+  this->currentX = x;
+  this->currentY = y;
+  this->currentZ = z;
   this->solve3DOF(x, y, z); 
 }
 
+void RobotLeg::setTarget(double x, double y, double z) {
+  this->targetX = x;
+  this->targetY = y;
+  this->targetZ = z;
+}
+
 void RobotLeg::solve3DOF(double tx, double ty, double tz) {
-  Serial.print("hip angle: ");
   double hipAngle = radToDeg(atan(ty / tx));
-  Serial.println(hipAngle);
   this->hip->angle(hipAngle);
   double AT = sqrt(pow(tx, 2) + pow(ty, 2));
   solve2DOF(AT, tz);
@@ -61,6 +69,29 @@ void RobotLeg::solve2DOF(double tx, double ty) {
   this->knee->angle(kneeAngle);
 }
 
+// convert radians to degrees
 double RobotLeg::radToDeg(double rad) {
   return rad * (180 / PI);
+}
+
+void RobotLeg::updateLeg(double elapsedMillis) {
+  double legMovement = (elapsedMillis * LEG_SPEED)/1000;
+  double distanceToTarget = (targetX - currentX);
+  if (!this->atTarget()) {
+    Serial.print("distance to target: ");
+    Serial.println(distanceToTarget);
+    if (targetX < currentX) {
+      currentX -= (abs(distanceToTarget) >= legMovement ? legMovement : distanceToTarget);
+      this->setPosition(currentX, currentY, currentZ);
+    } else if (targetX > currentX) {
+      Serial.println("not implemented");
+    }
+  } else {
+    Serial.print("distance to target: ");
+    Serial.println(distanceToTarget);
+  }
+}
+
+bool RobotLeg::atTarget() {
+  return (int)targetX == (int)currentX;
 }

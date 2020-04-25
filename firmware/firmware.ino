@@ -1,12 +1,11 @@
-
-#define CALIBRATION
-
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
 #ifdef CALIBRATION
 #include "Calibration.h"
 #endif
+
+#define SERVO_FREQ 50       // Analog servos run at ~50 Hz updates
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
@@ -39,6 +38,7 @@ Calibration calibration = Calibration(&pwm);
 
 #include "RobotServo.h"
 #include "RobotLeg.h"
+#include "Quadruped.h"
 
 // TODO: extend hip min/max to ~90degrees
 
@@ -82,6 +82,8 @@ RobotLeg legFL = RobotLeg(
   &servoFL_KNEE
 );
 
+Quadruped quadruped = Quadruped(&legRL, &legRR, &legFR, &legFL);
+
 void setup() {
   Serial.begin(9600);
   Serial.println("Started");
@@ -94,80 +96,68 @@ void setup() {
   pwm.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
 
   delay(10);
+  
+  legRL.setPosition(150, 0, 0);
+  legRR.setPosition(150, 0, 0);
+  legFR.setPosition(150, 0, 0);
+  legFL.setPosition(150, 0, 0);
 
-  //hip, thigh, knee
+  delay(2000);
 
-//  servoRL_HIP.angle(0); delay(500);
-//  servoRL_THIGH.angle(90); delay(500);
-//  servoRL_KNEE.angle(30); delay(500);
-//  
-//  servoRR_HIP.angle(0); delay(500);
-//  servoRR_THIGH.angle(-90); delay(500);
-//  servoRR_KNEE.angle(-30); delay(500);
-//
-//  servoFR_HIP.angle(0); delay(500);
-//  servoFR_THIGH.angle(90); delay(500);
-//  servoFR_KNEE.angle(30); delay(500);
-//  
-//  servoFL_HIP.angle(0); delay(500);
-//  servoFL_THIGH.angle(-90); delay(500);
-//  servoFL_KNEE.angle(-30); delay(500);
+  legRL.setTarget(120, 0, 0);
+  legRR.setTarget(120, 0, 0);
+  legFR.setTarget(120, 0, 0);
+  legFL.setTarget(120, 0, 0);
 }
 
-//unsigned long lastMillis;
+unsigned long lastMillis = 0;
 
 void loop() {
+  #ifdef CALIBRATION
+  calibration.processCommand();
+  #else
 
-  // debugging
+  unsigned long currentMillis = millis();
+  unsigned long elapsedMillis = currentMillis - lastMillis;
+  lastMillis = currentMillis;
 
+  legRL.updateLeg(elapsedMillis);
+  legRR.updateLeg(elapsedMillis);
+  legFR.updateLeg(elapsedMillis);
+  legFL.updateLeg(elapsedMillis);
+  
+  #endif
+}
+
+void testing() {
+  // touch the ground 15cm from body
   legRL.setPosition(150, 0, -38);
   legRR.setPosition(150, 0, -38);
   legFR.setPosition(150, 0, -38);
   legFL.setPosition(150, 0, -38);
   delay(1000);
+  // lift legs from the ground
   legRL.setPosition(150, 0, 0);
   legRR.setPosition(150, 0, 0);
   legFR.setPosition(150, 0, 0);
   legFL.setPosition(150, 0, 0);
   delay(1000);
+  // move legs in and down
   legRL.setPosition(120, 0, -20);
   legRR.setPosition(120, 0, -20);
   legFR.setPosition(120, 0, -20);
   legFL.setPosition(120, 0, -20);
   delay(1000);
+  // lift body 1cm from the ground
   legRL.setPosition(120, 0, -50);
   legRR.setPosition(120, 0, -50);
   legFR.setPosition(120, 0, -50);
   legFL.setPosition(120, 0, -50);
   delay(5000);
+  // lift legs back off the ground
   legRL.setPosition(120, 0, -20);
   legRR.setPosition(120, 0, -20);
   legFR.setPosition(120, 0, -20);
   legFL.setPosition(120, 0, -20);
   delay(1000);
-  
-//  unsigned long currentMillis = millis(); 
-//  unsigned long elapsedMillis = currentMillis - lastMillis;
-//  if (elapsedMillis >= 100) {
-//    solve2DOF(150, -38);
-//    Serial.println(elapsedMillis);
-//    lastMillis = currentMillis;
-//  }
-  
-  #ifdef CALIBRATION
-  calibration.processCommand();
-  #else
-  delay(1000);
-  servoRL_THIGH.angle(0);
-  servoRL_KNEE.angle(30);
-  delay(1000);
-  servoRR_THIGH.angle(0);
-  servoRR_KNEE.angle(-30);
-  delay(1000);
-  servoFR_THIGH.angle(0);
-  servoFR_KNEE.angle(30);
-  delay(1000);
-  servoFL_THIGH.angle(0);
-  servoFL_KNEE.angle(-30);
-  #endif
 }

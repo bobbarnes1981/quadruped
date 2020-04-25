@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <Adafruit_PWMServoDriver.h>
 
-#define SERVO_FREQ 50       // Analog servos run at ~50 Hz updates
 #define SERVO_CYCLE 0.02    // 50Hz is 0.02s cycle
 #define SERVO_STEP 4096     // 4096 descrete steps
 
