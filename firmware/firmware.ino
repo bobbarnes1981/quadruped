@@ -84,6 +84,8 @@ RobotLeg legFL = RobotLeg(
 
 Quadruped quadruped = Quadruped(&legRL, &legRR, &legFR, &legFL);
 
+unsigned long lastMillis = 0;
+
 void setup() {
   Serial.begin(9600);
   Serial.println("Started");
@@ -108,9 +110,9 @@ void setup() {
   legRR.setTarget(120, 0, 0);
   legFR.setTarget(120, 0, 0);
   legFL.setTarget(120, 0, 0);
-}
 
-unsigned long lastMillis = 0;
+  lastMillis = millis();
+}
 
 void loop() {
   #ifdef CALIBRATION

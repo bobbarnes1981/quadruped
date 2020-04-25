@@ -85,7 +85,7 @@ double RobotLeg::radToDeg(double rad) {
 }
 
 void RobotLeg::updateLeg(double elapsedMillis) {
-  double legMovement = (elapsedMillis * LEG_SPEED)/1000;
+  double legMovement = (elapsedMillis * LEG_SPEED) / 1000;
   this->moveLeg(
     this->updateLegCoord(legMovement, currentX, targetX),
     this->updateLegCoord(legMovement, currentY, targetY),
@@ -98,14 +98,16 @@ double RobotLeg::updateLegCoord(double distance, double current, double target) 
   if ((int)target != (int)current) {
     Serial.print("distance to target: ");
     Serial.println(distanceToTarget);
+//    Serial.print("distance: ");
+//    Serial.println(distance);
     if (target < current) {
       current -= (abs(distanceToTarget) >= distance ? distance : distanceToTarget);
     } else if (target > current) {
       Serial.println("not implemented");
     }
   } else {
-    Serial.print("distance to target: ");
-    Serial.println(distanceToTarget);
+//    Serial.print("distance to target: ");
+//    Serial.println(distanceToTarget);
   }
   return current;
 }
