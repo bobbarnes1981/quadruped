@@ -16,17 +16,27 @@ RobotLeg::~RobotLeg() {
 
 // move the foot to the specified position immediately
 // target x=l/r y=f/b z=u/d
-void RobotLeg::setPosition(double x, double y, double z) {
+void RobotLeg::moveLeg(double x, double y, double z) {
   this->currentX = x;
   this->currentY = y;
   this->currentZ = z;
-  this->solve3DOF(x, y, z); 
+  this->solve3DOF(
+    this->currentX + this->offsetX,
+    this->currentY + this->offsetY,
+    this->currentZ + this->offsetZ
+  ); 
 }
 
 void RobotLeg::setTarget(double x, double y, double z) {
   this->targetX = x;
   this->targetY = y;
   this->targetZ = z;
+}
+
+void RobotLeg::setOffset(double x, double y, double z) {
+  this->offsetX = x;
+  this->offsetY = y;
+  this->offsetZ = z;
 }
 
 void RobotLeg::solve3DOF(double tx, double ty, double tz) {
@@ -76,22 +86,26 @@ double RobotLeg::radToDeg(double rad) {
 
 void RobotLeg::updateLeg(double elapsedMillis) {
   double legMovement = (elapsedMillis * LEG_SPEED)/1000;
-  double distanceToTarget = (targetX - currentX);
-  if (!this->atTarget()) {
+  this->moveLeg(
+    this->updateLegCoord(legMovement, currentX, targetX),
+    this->updateLegCoord(legMovement, currentY, targetY),
+    this->updateLegCoord(legMovement, currentZ, targetZ)
+  );
+}
+
+double RobotLeg::updateLegCoord(double distance, double current, double target) {
+  double distanceToTarget = (target - current);
+  if ((int)target != (int)current) {
     Serial.print("distance to target: ");
     Serial.println(distanceToTarget);
-    if (targetX < currentX) {
-      currentX -= (abs(distanceToTarget) >= legMovement ? legMovement : distanceToTarget);
-      this->setPosition(currentX, currentY, currentZ);
-    } else if (targetX > currentX) {
+    if (target < current) {
+      current -= (abs(distanceToTarget) >= distance ? distance : distanceToTarget);
+    } else if (target > current) {
       Serial.println("not implemented");
     }
   } else {
     Serial.print("distance to target: ");
     Serial.println(distanceToTarget);
   }
-}
-
-bool RobotLeg::atTarget() {
-  return (int)targetX == (int)currentX;
+  return current;
 }

@@ -97,10 +97,10 @@ void setup() {
 
   delay(10);
   
-  legRL.setPosition(150, 0, 0);
-  legRR.setPosition(150, 0, 0);
-  legFR.setPosition(150, 0, 0);
-  legFL.setPosition(150, 0, 0);
+  legRL.moveLeg(150, 0, 0);
+  legRR.moveLeg(150, 0, 0);
+  legFR.moveLeg(150, 0, 0);
+  legFL.moveLeg(150, 0, 0);
 
   delay(2000);
 
@@ -131,33 +131,33 @@ void loop() {
 
 void testing() {
   // touch the ground 15cm from body
-  legRL.setPosition(150, 0, -38);
-  legRR.setPosition(150, 0, -38);
-  legFR.setPosition(150, 0, -38);
-  legFL.setPosition(150, 0, -38);
+  legRL.moveLeg(150, 0, -38);
+  legRR.moveLeg(150, 0, -38);
+  legFR.moveLeg(150, 0, -38);
+  legFL.moveLeg(150, 0, -38);
   delay(1000);
   // lift legs from the ground
-  legRL.setPosition(150, 0, 0);
-  legRR.setPosition(150, 0, 0);
-  legFR.setPosition(150, 0, 0);
-  legFL.setPosition(150, 0, 0);
+  legRL.moveLeg(150, 0, 0);
+  legRR.moveLeg(150, 0, 0);
+  legFR.moveLeg(150, 0, 0);
+  legFL.moveLeg(150, 0, 0);
   delay(1000);
   // move legs in and down
-  legRL.setPosition(120, 0, -20);
-  legRR.setPosition(120, 0, -20);
-  legFR.setPosition(120, 0, -20);
-  legFL.setPosition(120, 0, -20);
+  legRL.moveLeg(120, 0, -20);
+  legRR.moveLeg(120, 0, -20);
+  legFR.moveLeg(120, 0, -20);
+  legFL.moveLeg(120, 0, -20);
   delay(1000);
   // lift body 1cm from the ground
-  legRL.setPosition(120, 0, -50);
-  legRR.setPosition(120, 0, -50);
-  legFR.setPosition(120, 0, -50);
-  legFL.setPosition(120, 0, -50);
+  legRL.moveLeg(120, 0, -50);
+  legRR.moveLeg(120, 0, -50);
+  legFR.moveLeg(120, 0, -50);
+  legFL.moveLeg(120, 0, -50);
   delay(5000);
   // lift legs back off the ground
-  legRL.setPosition(120, 0, -20);
-  legRR.setPosition(120, 0, -20);
-  legFR.setPosition(120, 0, -20);
-  legFL.setPosition(120, 0, -20);
+  legRL.moveLeg(120, 0, -20);
+  legRR.moveLeg(120, 0, -20);
+  legFR.moveLeg(120, 0, -20);
+  legFL.moveLeg(120, 0, -20);
   delay(1000);
 }
