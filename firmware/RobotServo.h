@@ -12,10 +12,10 @@ class RobotServo {
     double dir;
     double minPulse;
     double maxPulse;
-    double minLimit;
-    double maxLimit;
+    double minAngle;
+    double maxAngle;
   public:
-    RobotServo(Adafruit_PWMServoDriver *pwm, int servoNumber, double offset, double dir, double minPulse, double maxPulse, double minLimit, double maxLimit);
+    RobotServo(Adafruit_PWMServoDriver *pwm, int servoNumber, double offset, double dir, double minPulse, double maxPulse, double minAngle, double maxAngle);
     ~RobotServo();
     void pulse(double pulseLength);
     void angle(double angleDegrees);
