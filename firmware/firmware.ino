@@ -84,6 +84,14 @@ RobotLeg legFL = RobotLeg(
 
 Quadruped quadruped = Quadruped(&legRL, &legRR, &legFR, &legFL);
 
+enum State {
+  state_startup,
+  state_initialising,
+  state_waiting,
+  state_moving
+};
+State currentState = state_startup;
+
 unsigned long lastMillis = 0;
 
 void setup() {
@@ -106,11 +114,6 @@ void setup() {
 
   delay(2000);
 
-  legRL.setTarget(120, 0, 0);
-  legRR.setTarget(120, 0, 0);
-  legFR.setTarget(120, 0, 0);
-  legFL.setTarget(120, 0, 0);
-
   lastMillis = millis();
 }
 
@@ -123,10 +126,35 @@ void loop() {
   unsigned long elapsedMillis = currentMillis - lastMillis;
   lastMillis = currentMillis;
 
-  legRL.updateLeg(elapsedMillis);
-  legRR.updateLeg(elapsedMillis);
-  legFR.updateLeg(elapsedMillis);
-  legFL.updateLeg(elapsedMillis);
+  Serial.println(elapsedMillis);
+
+  // todo: when should we read control input?
+
+  switch(currentState) {
+    case state_startup:
+      currentState = state_initialising;
+      break;
+    case state_initialising:
+      legRL.setTarget(120, 0, 0);
+      legRR.setTarget(120, 0, 0);
+      legFR.setTarget(120, 0, 0);
+      legFL.setTarget(120, 0, 0);
+      currentState = state_moving;
+      break;
+    case state_moving:
+      legRL.updateLeg(elapsedMillis);
+      legRR.updateLeg(elapsedMillis);
+      legFR.updateLeg(elapsedMillis);
+      legFL.updateLeg(elapsedMillis);
+      if (!legRL.isMoving() && !legRR.isMoving() && !legFR.isMoving() && !legFL.isMoving()) {
+        currentState = state_waiting;
+      }
+      break;
+    case state_waiting:
+      // nothing yet
+      Serial.println("waiting");
+      break;
+  }
   
   #endif
 }

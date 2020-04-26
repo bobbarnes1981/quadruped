@@ -96,18 +96,22 @@ void RobotLeg::updateLeg(double elapsedMillis) {
 double RobotLeg::updateLegCoord(double distance, double current, double target) {
   double distanceToTarget = (target - current);
   if ((int)target != (int)current) {
-    Serial.print("distance to target: ");
-    Serial.println(distanceToTarget);
+//    Serial.print("distance to target: ");
+//    Serial.println(distanceToTarget);
 //    Serial.print("distance: ");
 //    Serial.println(distance);
     if (target < current) {
       current -= (abs(distanceToTarget) >= distance ? distance : distanceToTarget);
     } else if (target > current) {
-      Serial.println("not implemented");
+//      Serial.println("not implemented");
     }
   } else {
 //    Serial.print("distance to target: ");
 //    Serial.println(distanceToTarget);
   }
   return current;
+}
+
+bool RobotLeg::isMoving() {
+  return (int)targetX != (int)currentX || (int)targetY != (int)currentY || (int)targetZ != (int)currentZ;
 }
