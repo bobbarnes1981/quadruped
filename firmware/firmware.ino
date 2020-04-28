@@ -88,7 +88,6 @@ Quadruped quadruped = Quadruped(&legRL, &legRR, &legFR, &legFL);
 
 enum State {
   state_startup,
-  state_testing,
   state_kinematics,
   state_waiting,
 
@@ -131,18 +130,6 @@ void setup() {
 int currentStep = -1;
 double cycle_startup[][4][3] = {
   {{-80, -80, 0},{80, -80, 0},{80, 80, 0},{-80, 80, 0}}
-};
-double cycle_testing[][4][3] = {
-  // touch the ground 15cm from body
-  {{100, 100, -38},{100, 100, -38},{100, 100, -38},{100, 100, -38}},
-  // lift legs from the ground
-  {{100, 100, 0},{100, 100, 0},{100, 100, 0},{100, 100, 0}},
-  // move legs in and down
-  {{80, 80, -20},{80, 80, -20},{80, 80, -20},{80, 80, -20}},
-  // lift body 1cm from the ground
-  {{80, 80, -80},{80, 80, -80},{80, 80, -80},{80, 80, -80}},
-  // lift legs back off the ground
-  {{80, 80, -20},{80, 80, -20},{80, 80, -20},{80, 80, -20}},
 };
 
 #define WALK_X 80
@@ -187,10 +174,6 @@ void loop() {
       currentStep = -1;
       currentState = state_startup;
     }
-    if (s == 't') {
-      currentStep = -1;
-      currentState = state_testing;
-    }
     if (s == 'k') {
       currentStep = -1;
       currentState = state_kinematics;
@@ -227,9 +210,6 @@ void loop() {
   switch(currentState) {
     case state_startup:
       moveLegs(elapsedMillis, cycle_startup, sizeof(cycle_startup)/sizeof(cycle_startup[0]), state_waiting);
-      break;
-    case state_testing:
-      moveLegs(elapsedMillis, cycle_testing, sizeof(cycle_testing)/sizeof(cycle_testing[0]), state_waiting);
       break;
     case state_kinematics:
       legRL.updateLeg(elapsedMillis);
