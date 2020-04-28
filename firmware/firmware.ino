@@ -155,9 +155,9 @@ double cycle_stand[][4][3] = {
   {{WALK_X, WALK_STEP_F-WALK_STEP_B, WALK_FLOOR}, {WALK_X, -WALK_STEP_F, WALK_FLOOR}, {WALK_X, WALK_Y, WALK_FLOOR}}
 };
 double cycle_walk[][3] = {
-  {WALK_X, WALK_STEP_F-WALK_STEP_B, WALK_FLOOR-WALK_HEIGHT}, // raise
-  {WALK_X, WALK_STEP_B, WALK_FLOOR-WALK_HEIGHT}, // move
-  {WALK_X, WALK_STEP_B, WALK_FLOOR}, // lower
+  {0, 0, -WALK_HEIGHT}, // raise
+  {0, WALK_STEP_B, 0}, // move
+  {0, 0, WALK_HEIGHT}, // lower
 };
 
 double offsetx = 0;
