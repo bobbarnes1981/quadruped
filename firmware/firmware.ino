@@ -44,7 +44,7 @@ Calibration calibration = Calibration(&pwm);
 #include "RobotLeg.h"
 #include "Quadruped.h"
 
-RobotServo servoRL_HIP = RobotServo(&pwm, RL_HIP, 0, 1, 0.001000, 0.001950, -45, 45);
+RobotServo servoRL_HIP = RobotServo(&pwm, RL_HIP, -45, 1, 0.001000, 0.001950, -45, 45);
 RobotServo servoRL_THIGH = RobotServo(&pwm, RL_THIGH, 0, 1, 0.001100, 0.002450, -38, 90);
 RobotServo servoRL_KNEE = RobotServo(&pwm, RL_KNEE, 90, -1, 0.000700, 0.002050, -90, 38);
 RobotLeg legRL = RobotLeg(
@@ -54,7 +54,7 @@ RobotLeg legRL = RobotLeg(
   &servoRL_KNEE
 );
 
-RobotServo servoRR_HIP = RobotServo(&pwm, RR_HIP, 0, 1, 0.001100, 0.002050, -45, 45);
+RobotServo servoRR_HIP = RobotServo(&pwm, RR_HIP, 45, -1, 0.001100, 0.002050, -45, 45);
 RobotServo servoRR_THIGH = RobotServo(&pwm, RR_THIGH,0, -1, 0.000600, 0.001950, -90, 38);
 RobotServo servoRR_KNEE = RobotServo(&pwm, RR_KNEE, -90, 1, 0.001000, 0.002350, -38, 90);
 RobotLeg legRR = RobotLeg(
@@ -64,7 +64,7 @@ RobotLeg legRR = RobotLeg(
   &servoRR_KNEE
 );
 
-RobotServo servoFR_HIP = RobotServo(&pwm, FR_HIP, 0, 1, 0.001050, 0.001950, -45, 45);
+RobotServo servoFR_HIP = RobotServo(&pwm, FR_HIP, -45, 1, 0.001050, 0.001950, -45, 45);
 RobotServo servoFR_THIGH = RobotServo(&pwm, FR_THIGH, 0, 1, 0.001050, 0.002400, -38, 90);
 RobotServo servoFR_KNEE = RobotServo(&pwm, FR_KNEE, 90, -1, 0.000800, 0.002150, -90, 38);
 RobotLeg legFR = RobotLeg(
@@ -74,7 +74,7 @@ RobotLeg legFR = RobotLeg(
   &servoFR_KNEE
 );
 
-RobotServo servoFL_HIP = RobotServo(&pwm, FL_HIP, 0, 1, 0.001100, 0.002000, -45, 45);
+RobotServo servoFL_HIP = RobotServo(&pwm, FL_HIP, 45, -1, 0.001100, 0.002000, -45, 45);
 RobotServo servoFL_THIGH = RobotServo(&pwm, FL_THIGH, 0, -1, 0.000650, 0.001950, -90, 38);
 RobotServo servoFL_KNEE = RobotServo(&pwm, FL_KNEE, -90, 1, 0.001000, 0.002350, -38, 90);
 RobotLeg legFL = RobotLeg(
@@ -106,10 +106,10 @@ void setup() {
 
   delay(10);
   
-  legRL.moveLeg(150, 0, 0);
-  legRR.moveLeg(150, 0, 0);
-  legFR.moveLeg(150, 0, 0);
-  legFL.moveLeg(150, 0, 0);
+  legRL.moveLeg(100, 100, 0);
+  legRR.moveLeg(100, 100, 0);
+  legFR.moveLeg(100, 100, 0);
+  legFL.moveLeg(100, 100, 0);
 
   delay(2000);
 
@@ -117,22 +117,24 @@ void setup() {
 }
 
 int currentStep = -1;
+//double cycle_init[][4][3] = {
+//  {{120, 0, 0},{120, 0, 0},{120, 0, 0},{120, 0, 0}}
+//};
 double cycle_init[][4][3] = {
-  {{120, 0, 0},{120, 0, 0},{120, 0, 0},{120, 0, 0}}
-};
-double cycle_testing[][4][3] = {
   // touch the ground 15cm from body
-  {{150, 0, -38},{150, 0, -38},{150, 0, -38},{150, 0, -38}},
+  {{100, 100, -38},{100, 100, -38},{100, 100, -38},{100, 100, -38}},
   // lift legs from the ground
-  {{150, 0, 0},{150, 0, 0},{150, 0, 0},{150, 0, 0}},
+  {{100, 100, 0},{100, 100, 0},{100, 100, 0},{100, 100, 0}},
   // move legs in and down
-  {{120, 0, -20},{120, 0, -20},{120, 0, -20},{120, 0, -20}},
+  {{80, 80, -20},{80, 80, -20},{80, 80, -20},{80, 80, -20}},
   // lift body 1cm from the ground
-  {{120, 0, -50},{120, 0, -50},{120, 0, -50},{120, 0, -50}},
+  {{80, 80, -80},{80, 80, -80},{80, 80, -80},{80, 80, -80}},
   // lift legs back off the ground
-  {{120, 0, -20},{120, 0, -20},{120, 0, -20},{120, 0, -20}},
+  {{80, 80, -20},{80, 80, -20},{80, 80, -20},{80, 80, -20}},
 };
 
+double offsetx = 0;
+double offsetz = 0;
 void loop() {
   #ifdef CALIBRATION
   calibration.processCommand();
@@ -142,10 +144,38 @@ void loop() {
   unsigned long elapsedMillis = currentMillis - lastMillis;
   lastMillis = currentMillis;
 
-  Serial.println(elapsedMillis);
+  //Serial.println(elapsedMillis);
 
-  // todo: when should we read control input?
-
+  if (Serial.available()) {
+    int s = Serial.read();
+    Serial.println(s);
+    if (s == 's') {
+      currentStep = -1;
+      currentState = state_next;
+    }
+    if (s == 'u') {
+      offsetz-=10;
+    }
+    if (s == 'd') {
+      offsetz+=10;
+    }
+    if (s == 'l') {
+      offsetx+=10;
+    }
+    if (s == 'r') {
+      offsetx-=10;
+    }
+    // todo: move this to testing state
+    legRL.setOffset(-offsetx, 0, offsetz);
+    legRR.setOffset(offsetx, 0, offsetz);
+    legFR.setOffset(offsetx, 0, offsetz);
+    legFL.setOffset(-offsetx, 0, offsetz);
+    legRL.updateLeg(1);
+    legRR.updateLeg(1);
+    legFR.updateLeg(1);
+    legFL.updateLeg(1);
+  }
+  
   switch(currentState) {
     case state_startup:
       currentState = state_next;
@@ -176,7 +206,6 @@ void loop() {
       break;
     case state_waiting:
       // nothing yet
-      Serial.println("waiting");
       break;
   }
   

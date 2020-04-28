@@ -1,7 +1,5 @@
 #include "RobotServo.h"
 
-#define PULSE_SCALE 0.020 / 4096 // 4096 steps in 50Hz
-
 RobotServo::RobotServo(Adafruit_PWMServoDriver *pwm, int servoNumber, double offset, double dir, double minPulse, double maxPulse, double minAngle, double maxAngle) {
   this->pwm = pwm;
   this->servoNumber = servoNumber;
@@ -21,13 +19,13 @@ RobotServo::~RobotServo() {
 void RobotServo::pulse(double pulseLength) {
   if (pulseLength < this->minPulse) {
     pulseLength = this->minPulse;
-    // TODO: warning
+    Serial.println("min limit");
   }
   if (pulseLength > this->maxPulse) {
     pulseLength = this->maxPulse;
-    // TODO: warning
+    Serial.println("max limit");
   }
-  this->pwm->setPWM(this->servoNumber, 0, pulseLength / PULSE_SCALE);
+  this->pwm->setPWM(this->servoNumber, 0, pulseLength / (0.020 / 4096));
 }
 
 // set servo to specified angle (adjusts for offset and direction of servo)

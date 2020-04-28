@@ -1,6 +1,6 @@
 #include "RobotLeg.h"
 
-#define LEG_SPEED 10 // 10mm/s
+#define LEG_SPEED 100 // mm/s
 
 RobotLeg::RobotLeg(double lengthFemur, double lengthTibia, RobotServo *hip, RobotServo *thigh, RobotServo *knee) {
   this->lengthFemur = lengthFemur;
@@ -92,26 +92,24 @@ void RobotLeg::updateLeg(double elapsedMillis) {
     this->updateLegCoord(legMovement, currentZ, targetZ)
   );
 }
-
+#define DEBUG
 double RobotLeg::updateLegCoord(double distance, double current, double target) {
   double distanceToTarget = (target - current);
   if ((int)target != (int)current) {
-    #ifdef DEBUG
-    Serial.print("distance to target: ");
-    Serial.println(distanceToTarget);
-    Serial.print("distance: ");
-    Serial.println(distance);
-    #endif
     if (target < current) {
-      current -= (abs(distanceToTarget) >= distance ? distance : distanceToTarget);
+      if (abs(distanceToTarget) > distance) {
+        current -= distance;
+      } else {
+        current = target;
+      }
     } else if (target > current) {
-      Serial.println("not implemented");
+      if (abs(distanceToTarget) > distance) {
+        current += distance;
+      } else {
+        current = target;
+      }
     }
   } else {
-    #ifdef DEBUG
-    Serial.print("distance to target: ");
-    Serial.println(distanceToTarget);
-    #endif
   }
   return current;
 }
