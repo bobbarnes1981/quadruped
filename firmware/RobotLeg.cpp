@@ -37,7 +37,7 @@ void RobotLeg::setPosition(double x, double y, double z) {
   ); 
 }
 
-void RobotLeg::setTarget(double x, double y, double z) {
+void RobotLeg::setAbsoluteTarget(double x, double y, double z) {
   this->targetX = (x * this->dirX);
   this->targetY = (y * this->dirY);
   this->targetZ = z;

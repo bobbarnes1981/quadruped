@@ -31,7 +31,7 @@ class RobotLeg {
     RobotLeg(double lengthFemur, double lengthTibia, double dirX, double dirY, RobotServo *hip, RobotServo *thigh, RobotServo *knee);
     ~RobotLeg();
     void moveLeg(double x, double y, double z);
-    void setTarget(double x, double y, double z);
+    void setAbsoluteTarget(double x, double y, double z);
     void setRelativeTarget(double x, double y, double z);
     void setOffset(double x, double y, double z);
     void updateLeg(double elapsedMillis);
