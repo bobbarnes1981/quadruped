@@ -88,8 +88,7 @@ Quadruped quadruped = Quadruped(&legRL, &legRR, &legFR, &legFL);
 
 enum State {
   state_startup,
-  state_next,
-  state_moving,
+  state_testing,
   state_waiting
 };
 State currentState = state_startup;
@@ -117,10 +116,10 @@ void setup() {
 }
 
 int currentStep = -1;
-//double cycle_init[][4][3] = {
-//  {{120, 0, 0},{120, 0, 0},{120, 0, 0},{120, 0, 0}}
-//};
-double cycle_init[][4][3] = {
+double cycle_startup[][4][3] = {
+  {{120, 0, 0},{120, 0, 0},{120, 0, 0},{120, 0, 0}}
+};
+double cycle_testing[][4][3] = {
   // touch the ground 15cm from body
   {{100, 100, -38},{100, 100, -38},{100, 100, -38},{100, 100, -38}},
   // lift legs from the ground
@@ -134,6 +133,7 @@ double cycle_init[][4][3] = {
 };
 
 double offsetx = 0;
+double offsety = 0;
 double offsetz = 0;
 void loop() {
   #ifdef CALIBRATION
@@ -143,7 +143,6 @@ void loop() {
   unsigned long currentMillis = millis();
   unsigned long elapsedMillis = currentMillis - lastMillis;
   lastMillis = currentMillis;
-
   //Serial.println(elapsedMillis);
 
   if (Serial.available()) {
@@ -151,7 +150,7 @@ void loop() {
     Serial.println(s);
     if (s == 's') {
       currentStep = -1;
-      currentState = state_next;
+      currentState = state_startup;
     }
     if (s == 'u') {
       offsetz-=10;
@@ -165,11 +164,17 @@ void loop() {
     if (s == 'r') {
       offsetx-=10;
     }
+    if (s == 'f') {
+      offsety+=10;
+    }
+    if (s == 'b') {
+      offsety-=10;
+    }
     // todo: move this to testing state
-    legRL.setOffset(-offsetx, 0, offsetz);
-    legRR.setOffset(offsetx, 0, offsetz);
-    legFR.setOffset(offsetx, 0, offsetz);
-    legFL.setOffset(-offsetx, 0, offsetz);
+    legRL.setOffset(-offsetx, -offsety, offsetz);
+    legRR.setOffset(offsetx, -offsety, offsetz);
+    legFR.setOffset(offsetx, offsety, offsetz);
+    legFL.setOffset(-offsetx, offsety, offsetz);
     legRL.updateLeg(1);
     legRR.updateLeg(1);
     legFR.updateLeg(1);
@@ -178,30 +183,26 @@ void loop() {
   
   switch(currentState) {
     case state_startup:
-      currentState = state_next;
-      break;
-    case state_next:
-      currentStep++;
-      if (currentStep >= sizeof(cycle_init)/sizeof(cycle_init[0])) {
-        // no more steps, stop
-        currentState = state_waiting;
-      } else {
-        // set next target
-        legRL.setTarget(cycle_init[currentStep][RL_LEG][0], cycle_init[currentStep][RL_LEG][1], cycle_init[currentStep][RL_LEG][2]);
-        legRR.setTarget(cycle_init[currentStep][RR_LEG][0], cycle_init[currentStep][RR_LEG][1], cycle_init[currentStep][RR_LEG][2]);
-        legFR.setTarget(cycle_init[currentStep][FR_LEG][0], cycle_init[currentStep][FR_LEG][1], cycle_init[currentStep][FR_LEG][2]);
-        legFL.setTarget(cycle_init[currentStep][FL_LEG][0], cycle_init[currentStep][FL_LEG][1], cycle_init[currentStep][FL_LEG][2]);
-        currentState = state_moving;
-      }
-      break;
-    case state_moving:
-      legRL.updateLeg(elapsedMillis);
-      legRR.updateLeg(elapsedMillis);
-      legFR.updateLeg(elapsedMillis);
-      legFL.updateLeg(elapsedMillis);
+      // TODO: move to function with array as parameter
       if (!legRL.isMoving() && !legRR.isMoving() && !legFR.isMoving() && !legFL.isMoving()) {
         // finished move, get next
-        currentState = state_next;
+        currentStep++;
+        if (currentStep >= sizeof(cycle_startup)/sizeof(cycle_startup[0])) {
+          // no more steps, stop
+          currentState = state_waiting;
+        } else {
+          // set next target
+          legRL.setTarget(cycle_startup[currentStep][RL_LEG][0], cycle_startup[currentStep][RL_LEG][1], cycle_startup[currentStep][RL_LEG][2]);
+          legRR.setTarget(cycle_startup[currentStep][RR_LEG][0], cycle_startup[currentStep][RR_LEG][1], cycle_startup[currentStep][RR_LEG][2]);
+          legFR.setTarget(cycle_startup[currentStep][FR_LEG][0], cycle_startup[currentStep][FR_LEG][1], cycle_startup[currentStep][FR_LEG][2]);
+          legFL.setTarget(cycle_startup[currentStep][FL_LEG][0], cycle_startup[currentStep][FL_LEG][1], cycle_startup[currentStep][FL_LEG][2]);
+        }
+      } else {
+        // still need to move
+        legRL.updateLeg(elapsedMillis);
+        legRR.updateLeg(elapsedMillis);
+        legFR.updateLeg(elapsedMillis);
+        legFL.updateLeg(elapsedMillis);
       }
       break;
     case state_waiting:
