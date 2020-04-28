@@ -29,6 +29,7 @@ class RobotLeg {
     ~RobotLeg();
     void moveLeg(double x, double y, double z);
     void setTarget(double x, double y, double z);
+    void setRelativeTarget(double x, double y, double z);
     void setOffset(double x, double y, double z);
     void updateLeg(double elapsedMillis);
     bool isMoving();

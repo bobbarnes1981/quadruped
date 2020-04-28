@@ -90,7 +90,15 @@ enum State {
   state_startup,
   state_testing,
   state_kinematics,
-  state_waiting
+  state_waiting,
+
+  state_stand,
+  state_walk_rear_right,
+  state_walk_front_right,
+  state_walk_body_right,
+  state_walk_rear_left,
+  state_walk_front_left,
+  state_walk_body_left,
 };
 State currentState = state_startup;
 
@@ -135,6 +143,21 @@ double cycle_testing[][4][3] = {
   {{80, 80, -80},{80, 80, -80},{80, 80, -80},{80, 80, -80}},
   // lift legs back off the ground
   {{80, 80, -20},{80, 80, -20},{80, 80, -20},{80, 80, -20}},
+};
+
+#define WALK_X 50
+#define WALK_Y 50
+#define WALK_STEP_F 10
+#define WALK_STEP_B 120
+#define WALK_FLOOR -70
+#define WALK_HEIGHT 30
+double cycle_stand[][4][3] = {
+  {{WALK_X, WALK_STEP_F-WALK_STEP_B, WALK_FLOOR}, {WALK_X, -WALK_STEP_F, WALK_FLOOR}, {WALK_X, WALK_Y, WALK_FLOOR}}
+};
+double cycle_walk[][3] = {
+  {WALK_X, WALK_STEP_F-WALK_STEP_B, WALK_FLOOR-WALK_HEIGHT}, // raise
+  {WALK_X, WALK_STEP_B, WALK_FLOOR-WALK_HEIGHT}, // move
+  {WALK_X, WALK_STEP_B, WALK_FLOOR}, // lower
 };
 
 double offsetx = 0;
@@ -192,16 +215,37 @@ void loop() {
   
   switch(currentState) {
     case state_startup:
-      moveLegs(elapsedMillis, cycle_startup, sizeof(cycle_startup)/sizeof(cycle_startup[0]));
+      moveLegs(elapsedMillis, cycle_startup, sizeof(cycle_startup)/sizeof(cycle_startup[0]), state_waiting);
       break;
     case state_testing:
-      moveLegs(elapsedMillis, cycle_testing, sizeof(cycle_testing)/sizeof(cycle_testing[0]));
+      moveLegs(elapsedMillis, cycle_testing, sizeof(cycle_testing)/sizeof(cycle_testing[0]), state_waiting);
       break;
     case state_kinematics:
       legRL.updateLeg(elapsedMillis);
       legRR.updateLeg(elapsedMillis);
       legFR.updateLeg(elapsedMillis);
       legFL.updateLeg(elapsedMillis);
+      break;
+    case state_stand:
+      moveLegs(elapsedMillis, cycle_stand, sizeof(cycle_stand)/sizeof(cycle_stand[0]), state_walk_rear_right);
+      break;
+    case state_walk_rear_right:
+      stepLeg(elapsedMillis, &legRR, cycle_walk, sizeof(cycle_walk)/sizeof(cycle_walk[0]), state_walk_front_right);
+      break;
+    case state_walk_front_right:
+      stepLeg(elapsedMillis, &legFR, cycle_walk, sizeof(cycle_walk)/sizeof(cycle_walk[0]), state_walk_body_right);
+      break;
+    case state_walk_body_right:
+      // state_walk_body_right - moveLegs -(WALK_STEP_B/2)
+      break;
+    case state_walk_rear_left:
+      stepLeg(elapsedMillis, &legRL, cycle_walk, sizeof(cycle_walk)/sizeof(cycle_walk[0]), state_walk_front_left);
+      break;
+    case state_walk_front_left:
+      stepLeg(elapsedMillis, &legFL, cycle_walk, sizeof(cycle_walk)/sizeof(cycle_walk[0]), state_walk_body_left);
+      break;
+    case state_walk_body_left:
+      // state_walk_body_left - moveLegs -(WALK_STEP_B/2)
       break;
     case state_waiting:
       // nothing yet
@@ -211,13 +255,13 @@ void loop() {
   #endif
 }
 
-void moveLegs(double elapsedMillis, double cycle[][4][3], int steps) {
+void moveLegs(double elapsedMillis, double cycle[][4][3], int steps, State nextState) {
   if (!legRL.isMoving() && !legRR.isMoving() && !legFR.isMoving() && !legFL.isMoving()) {
     // get next
     currentStep++;
     if (currentStep >= steps) {
       // no more steps, stop
-      currentState = state_waiting;
+      currentState = nextState;
     } else {
       // set next target
       legRL.setTarget(cycle[currentStep][RL_LEG][0], cycle[currentStep][RL_LEG][1], cycle[currentStep][RL_LEG][2]);
@@ -231,5 +275,22 @@ void moveLegs(double elapsedMillis, double cycle[][4][3], int steps) {
     legRR.updateLeg(elapsedMillis);
     legFR.updateLeg(elapsedMillis);
     legFL.updateLeg(elapsedMillis);
+  }
+}
+
+void stepLeg(double elapsedMillis, RobotLeg *leg, double cycle[][3], int steps, State nextState) {
+  if (!leg->isMoving()) {
+    // get next
+    currentStep++;
+    if (currentStep >= steps) {
+      // no more steps, stop
+      currentState = nextState;
+    } else {
+      // set next target
+      leg->setRelativeTarget(cycle[currentStep][0], cycle[currentStep][1], cycle[currentStep][2]);
+    }
+  } else {
+    // still need to move
+    leg->updateLeg(elapsedMillis);
   }
 }

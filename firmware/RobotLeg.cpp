@@ -33,6 +33,12 @@ void RobotLeg::setTarget(double x, double y, double z) {
   this->targetZ = z;
 }
 
+void RobotLeg::setRelativeTarget(double x, double y, double z) {
+  this->targetX = this->currentX + x;
+  this->targetY = this->currentY + y;
+  this->targetZ = this->currentZ + z;
+}
+
 void RobotLeg::setOffset(double x, double y, double z) {
   this->offsetX = x;
   this->offsetY = y;
