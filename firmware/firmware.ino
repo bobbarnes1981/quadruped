@@ -89,6 +89,7 @@ Quadruped quadruped = Quadruped(&legRL, &legRR, &legFR, &legFL);
 enum State {
   state_startup,
   state_testing,
+  state_kinematics,
   state_waiting
 };
 State currentState = state_startup;
@@ -109,6 +110,10 @@ void setup() {
   legRR.moveLeg(100, 100, 0);
   legFR.moveLeg(100, 100, 0);
   legFL.moveLeg(100, 100, 0);
+  legRL.setTarget(100, 100, 0);
+  legRR.setTarget(100, 100, 0);
+  legFR.setTarget(100, 100, 0);
+  legFL.setTarget(100, 100, 0);
 
   delay(2000);
 
@@ -117,7 +122,7 @@ void setup() {
 
 int currentStep = -1;
 double cycle_startup[][4][3] = {
-  {{120, 0, 0},{120, 0, 0},{120, 0, 0},{120, 0, 0}}
+  {{80, 80, 0},{80, 80, 0},{80, 80, 0},{80, 80, 0}}
 };
 double cycle_testing[][4][3] = {
   // touch the ground 15cm from body
@@ -152,6 +157,14 @@ void loop() {
       currentStep = -1;
       currentState = state_startup;
     }
+    if (s == 't') {
+      currentStep = -1;
+      currentState = state_testing;
+    }
+    if (s == 'k') {
+      currentStep = -1;
+      currentState = state_kinematics;
+    }
     if (s == 'u') {
       offsetz-=10;
     }
@@ -165,45 +178,30 @@ void loop() {
       offsetx-=10;
     }
     if (s == 'f') {
-      offsety+=10;
+      offsety-=10;
     }
     if (s == 'b') {
-      offsety-=10;
+      offsety+=10;
     }
     // todo: move this to testing state
     legRL.setOffset(-offsetx, -offsety, offsetz);
     legRR.setOffset(offsetx, -offsety, offsetz);
     legFR.setOffset(offsetx, offsety, offsetz);
     legFL.setOffset(-offsetx, offsety, offsetz);
-    legRL.updateLeg(1);
-    legRR.updateLeg(1);
-    legFR.updateLeg(1);
-    legFL.updateLeg(1);
   }
   
   switch(currentState) {
     case state_startup:
-      // TODO: move to function with array as parameter
-      if (!legRL.isMoving() && !legRR.isMoving() && !legFR.isMoving() && !legFL.isMoving()) {
-        // finished move, get next
-        currentStep++;
-        if (currentStep >= sizeof(cycle_startup)/sizeof(cycle_startup[0])) {
-          // no more steps, stop
-          currentState = state_waiting;
-        } else {
-          // set next target
-          legRL.setTarget(cycle_startup[currentStep][RL_LEG][0], cycle_startup[currentStep][RL_LEG][1], cycle_startup[currentStep][RL_LEG][2]);
-          legRR.setTarget(cycle_startup[currentStep][RR_LEG][0], cycle_startup[currentStep][RR_LEG][1], cycle_startup[currentStep][RR_LEG][2]);
-          legFR.setTarget(cycle_startup[currentStep][FR_LEG][0], cycle_startup[currentStep][FR_LEG][1], cycle_startup[currentStep][FR_LEG][2]);
-          legFL.setTarget(cycle_startup[currentStep][FL_LEG][0], cycle_startup[currentStep][FL_LEG][1], cycle_startup[currentStep][FL_LEG][2]);
-        }
-      } else {
-        // still need to move
-        legRL.updateLeg(elapsedMillis);
-        legRR.updateLeg(elapsedMillis);
-        legFR.updateLeg(elapsedMillis);
-        legFL.updateLeg(elapsedMillis);
-      }
+      moveLegs(elapsedMillis, cycle_startup, sizeof(cycle_startup)/sizeof(cycle_startup[0]));
+      break;
+    case state_testing:
+      moveLegs(elapsedMillis, cycle_testing, sizeof(cycle_testing)/sizeof(cycle_testing[0]));
+      break;
+    case state_kinematics:
+      legRL.updateLeg(elapsedMillis);
+      legRR.updateLeg(elapsedMillis);
+      legFR.updateLeg(elapsedMillis);
+      legFL.updateLeg(elapsedMillis);
       break;
     case state_waiting:
       // nothing yet
@@ -211,4 +209,27 @@ void loop() {
   }
   
   #endif
+}
+
+void moveLegs(double elapsedMillis, double cycle[][4][3], int steps) {
+  if (!legRL.isMoving() && !legRR.isMoving() && !legFR.isMoving() && !legFL.isMoving()) {
+    // get next
+    currentStep++;
+    if (currentStep >= steps) {
+      // no more steps, stop
+      currentState = state_waiting;
+    } else {
+      // set next target
+      legRL.setTarget(cycle[currentStep][RL_LEG][0], cycle[currentStep][RL_LEG][1], cycle[currentStep][RL_LEG][2]);
+      legRR.setTarget(cycle[currentStep][RR_LEG][0], cycle[currentStep][RR_LEG][1], cycle[currentStep][RR_LEG][2]);
+      legFR.setTarget(cycle[currentStep][FR_LEG][0], cycle[currentStep][FR_LEG][1], cycle[currentStep][FR_LEG][2]);
+      legFL.setTarget(cycle[currentStep][FL_LEG][0], cycle[currentStep][FL_LEG][1], cycle[currentStep][FL_LEG][2]);
+    }
+  } else {
+    // still need to move
+    legRL.updateLeg(elapsedMillis);
+    legRR.updateLeg(elapsedMillis);
+    legFR.updateLeg(elapsedMillis);
+    legFL.updateLeg(elapsedMillis);
+  }
 }
