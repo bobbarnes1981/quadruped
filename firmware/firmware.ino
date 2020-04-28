@@ -48,7 +48,7 @@ RobotServo servoRL_HIP = RobotServo(&pwm, RL_HIP, -45, 1, 0.001000, 0.001950, -4
 RobotServo servoRL_THIGH = RobotServo(&pwm, RL_THIGH, 0, 1, 0.001100, 0.002450, -38, 90);
 RobotServo servoRL_KNEE = RobotServo(&pwm, RL_KNEE, 90, -1, 0.000700, 0.002050, -90, 38);
 RobotLeg legRL = RobotLeg(
-  LENGTH_FEMUR, LENGTH_TIBIA,
+  LENGTH_FEMUR, LENGTH_TIBIA, -1, -1,
   &servoRL_HIP,
   &servoRL_THIGH,
   &servoRL_KNEE
@@ -58,7 +58,7 @@ RobotServo servoRR_HIP = RobotServo(&pwm, RR_HIP, 45, -1, 0.001100, 0.002050, -4
 RobotServo servoRR_THIGH = RobotServo(&pwm, RR_THIGH,0, -1, 0.000600, 0.001950, -90, 38);
 RobotServo servoRR_KNEE = RobotServo(&pwm, RR_KNEE, -90, 1, 0.001000, 0.002350, -38, 90);
 RobotLeg legRR = RobotLeg(
-  LENGTH_FEMUR, LENGTH_TIBIA,
+  LENGTH_FEMUR, LENGTH_TIBIA, 1, -1,
   &servoRR_HIP,
   &servoRR_THIGH,
   &servoRR_KNEE
@@ -68,7 +68,7 @@ RobotServo servoFR_HIP = RobotServo(&pwm, FR_HIP, -45, 1, 0.001050, 0.001950, -4
 RobotServo servoFR_THIGH = RobotServo(&pwm, FR_THIGH, 0, 1, 0.001050, 0.002400, -38, 90);
 RobotServo servoFR_KNEE = RobotServo(&pwm, FR_KNEE, 90, -1, 0.000800, 0.002150, -90, 38);
 RobotLeg legFR = RobotLeg(
-  LENGTH_FEMUR, LENGTH_TIBIA,
+  LENGTH_FEMUR, LENGTH_TIBIA, 1, 1,
   &servoFR_HIP,
   &servoFR_THIGH,
   &servoFR_KNEE
@@ -78,7 +78,7 @@ RobotServo servoFL_HIP = RobotServo(&pwm, FL_HIP, 45, -1, 0.001100, 0.002000, -4
 RobotServo servoFL_THIGH = RobotServo(&pwm, FL_THIGH, 0, -1, 0.000650, 0.001950, -90, 38);
 RobotServo servoFL_KNEE = RobotServo(&pwm, FL_KNEE, -90, 1, 0.001000, 0.002350, -38, 90);
 RobotLeg legFL = RobotLeg(
-  LENGTH_FEMUR, LENGTH_TIBIA,
+  LENGTH_FEMUR, LENGTH_TIBIA, -1, 1,
   &servoFL_HIP,
   &servoFL_THIGH,
   &servoFL_KNEE
@@ -113,15 +113,15 @@ void setup() {
   pwm.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
 
   delay(10);
-  
-  legRL.moveLeg(100, 100, 0);
-  legRR.moveLeg(100, 100, 0);
+
+  legRL.moveLeg(-100, -100, 0);
+  legRR.moveLeg(100, -100, 0);
   legFR.moveLeg(100, 100, 0);
-  legFL.moveLeg(100, 100, 0);
-  legRL.setTarget(100, 100, 0);
-  legRR.setTarget(100, 100, 0);
+  legFL.moveLeg(-100, 100, 0);
+  legRL.setTarget(-100, -100, 0);
+  legRR.setTarget(100, -100, 0);
   legFR.setTarget(100, 100, 0);
-  legFL.setTarget(100, 100, 0);
+  legFL.setTarget(-100, 100, 0);
 
   delay(2000);
 
@@ -130,7 +130,7 @@ void setup() {
 
 int currentStep = -1;
 double cycle_startup[][4][3] = {
-  {{80, 80, 0},{80, 80, 0},{80, 80, 0},{80, 80, 0}}
+  {{-80, -80, 0},{80, -80, 0},{80, 80, 0},{-80, 80, 0}}
 };
 double cycle_testing[][4][3] = {
   // touch the ground 15cm from body
@@ -145,19 +145,27 @@ double cycle_testing[][4][3] = {
   {{80, 80, -20},{80, 80, -20},{80, 80, -20},{80, 80, -20}},
 };
 
-#define WALK_X 50
-#define WALK_Y 50
+#define WALK_X 80
+#define WALK_Y 80
 #define WALK_STEP_F 10
-#define WALK_STEP_B 120
+#define WALK_STEP_B 100
 #define WALK_FLOOR -70
-#define WALK_HEIGHT 30
+#define WALK_HEIGHT 40
 double cycle_stand[][4][3] = {
-  {{WALK_X, WALK_STEP_F-WALK_STEP_B, WALK_FLOOR}, {WALK_X, -WALK_STEP_F, WALK_FLOOR}, {WALK_X, WALK_Y, WALK_FLOOR}}
+  {
+    {-WALK_X, -WALK_Y, WALK_FLOOR},
+    {WALK_X, -WALK_STEP_B, WALK_FLOOR},
+    {WALK_X, WALK_STEP_F, WALK_FLOOR},
+    {-WALK_X, WALK_Y, WALK_FLOOR}
+  }
 };
 double cycle_walk[][3] = {
-  {0, 0, -WALK_HEIGHT}, // raise
+  {0, 0, WALK_HEIGHT}, // raise
   {0, WALK_STEP_B, 0}, // move
-  {0, 0, WALK_HEIGHT}, // lower
+  {0, 0, -WALK_HEIGHT}, // lower
+};
+double cycle_body[][3] = {
+  {0, -WALK_STEP_B/2, 0}, // forward
 };
 
 double offsetx = 0;
@@ -187,6 +195,10 @@ void loop() {
     if (s == 'k') {
       currentStep = -1;
       currentState = state_kinematics;
+    }
+    if (s == 'w') {
+      currentStep = -1;
+      currentState = state_stand;
     }
     if (s == 'u') {
       offsetz-=10;
@@ -236,7 +248,7 @@ void loop() {
       stepLeg(elapsedMillis, &legFR, cycle_walk, sizeof(cycle_walk)/sizeof(cycle_walk[0]), state_walk_body_right);
       break;
     case state_walk_body_right:
-      // state_walk_body_right - moveLegs -(WALK_STEP_B/2)
+      stepLegs(elapsedMillis, cycle_body, sizeof(cycle_body)/sizeof(cycle_body[0]), state_walk_rear_left);
       break;
     case state_walk_rear_left:
       stepLeg(elapsedMillis, &legRL, cycle_walk, sizeof(cycle_walk)/sizeof(cycle_walk[0]), state_walk_front_left);
@@ -245,7 +257,7 @@ void loop() {
       stepLeg(elapsedMillis, &legFL, cycle_walk, sizeof(cycle_walk)/sizeof(cycle_walk[0]), state_walk_body_left);
       break;
     case state_walk_body_left:
-      // state_walk_body_left - moveLegs -(WALK_STEP_B/2)
+      stepLegs(elapsedMillis, cycle_body, sizeof(cycle_body)/sizeof(cycle_body[0]), state_waiting);
       break;
     case state_waiting:
       // nothing yet
@@ -261,6 +273,7 @@ void moveLegs(double elapsedMillis, double cycle[][4][3], int steps, State nextS
     currentStep++;
     if (currentStep >= steps) {
       // no more steps, stop
+      currentStep = -1;
       currentState = nextState;
     } else {
       // set next target
@@ -284,6 +297,7 @@ void stepLeg(double elapsedMillis, RobotLeg *leg, double cycle[][3], int steps, 
     currentStep++;
     if (currentStep >= steps) {
       // no more steps, stop
+      currentStep = -1;
       currentState = nextState;
     } else {
       // set next target
@@ -292,5 +306,29 @@ void stepLeg(double elapsedMillis, RobotLeg *leg, double cycle[][3], int steps, 
   } else {
     // still need to move
     leg->updateLeg(elapsedMillis);
+  }
+}
+
+void stepLegs(double elapsedMillis, double cycle[][3], int steps, State nextState) {
+  if (!legRL.isMoving() && !legRR.isMoving() && !legFR.isMoving() && !legFL.isMoving()) {
+    // get next
+    currentStep++;
+    if (currentStep >= steps) {
+      // no more steps, stop
+      currentStep = -1;
+      currentState = nextState;
+    } else {
+      // set next target
+      legRR.setRelativeTarget(cycle[currentStep][0], cycle[currentStep][1], cycle[currentStep][2]);
+      legRL.setRelativeTarget(cycle[currentStep][0], cycle[currentStep][1], cycle[currentStep][2]);
+      legFL.setRelativeTarget(cycle[currentStep][0], cycle[currentStep][1], cycle[currentStep][2]);
+      legFR.setRelativeTarget(cycle[currentStep][0], cycle[currentStep][1], cycle[currentStep][2]);
+    }
+  } else {
+    // still need to move
+    legRR.updateLeg(elapsedMillis);
+    legRL.updateLeg(elapsedMillis);
+    legFL.updateLeg(elapsedMillis);
+    legFR.updateLeg(elapsedMillis);
   }
 }

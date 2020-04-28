@@ -17,6 +17,8 @@ class RobotLeg {
     double offsetX;
     double offsetY;
     double offsetZ;
+    double dirX;
+    double dirY;
     RobotServo *hip;
     RobotServo *thigh;
     RobotServo *knee;
@@ -24,8 +26,9 @@ class RobotLeg {
     void solve2DOF(double tx, double ty);
     double radToDeg(double rad);
     double updateLegCoord(double distance, double current, double target);
+    void setPosition(double x, double y, double z);
   public:
-    RobotLeg(double lengthFemur, double lengthTibia, RobotServo *hip, RobotServo *thigh, RobotServo *knee);
+    RobotLeg(double lengthFemur, double lengthTibia, double dirX, double dirY, RobotServo *hip, RobotServo *thigh, RobotServo *knee);
     ~RobotLeg();
     void moveLeg(double x, double y, double z);
     void setTarget(double x, double y, double z);

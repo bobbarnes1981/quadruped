@@ -1,10 +1,12 @@
 #include "RobotLeg.h"
 
-#define LEG_SPEED 100 // mm/s
+#define LEG_SPEED 200 // mm/s
 
-RobotLeg::RobotLeg(double lengthFemur, double lengthTibia, RobotServo *hip, RobotServo *thigh, RobotServo *knee) {
+RobotLeg::RobotLeg(double lengthFemur, double lengthTibia, double dirX, double dirY, RobotServo *hip, RobotServo *thigh, RobotServo *knee) {
   this->lengthFemur = lengthFemur;
   this->lengthTibia = lengthTibia;
+  this->dirX = dirX;
+  this->dirY = dirY;
   this->hip = hip;
   this->thigh = thigh;
   this->knee = knee;
@@ -17,6 +19,14 @@ RobotLeg::~RobotLeg() {
 // move the foot to the specified position immediately
 // target x=l/r y=f/b z=u/d
 void RobotLeg::moveLeg(double x, double y, double z) {
+  this->setPosition(
+    (x * this->dirX),
+    (y * this->dirY),
+    z
+  ); 
+}
+
+void RobotLeg::setPosition(double x, double y, double z) {
   this->currentX = x;
   this->currentY = y;
   this->currentZ = z;
@@ -28,14 +38,14 @@ void RobotLeg::moveLeg(double x, double y, double z) {
 }
 
 void RobotLeg::setTarget(double x, double y, double z) {
-  this->targetX = x;
-  this->targetY = y;
+  this->targetX = (x * this->dirX);
+  this->targetY = (y * this->dirY);
   this->targetZ = z;
 }
 
 void RobotLeg::setRelativeTarget(double x, double y, double z) {
-  this->targetX = this->currentX + x;
-  this->targetY = this->currentY + y;
+  this->targetX = this->currentX + (x * this->dirX);
+  this->targetY = this->currentY + (y * this->dirY);
   this->targetZ = this->currentZ + z;
 }
 
@@ -92,7 +102,7 @@ double RobotLeg::radToDeg(double rad) {
 
 void RobotLeg::updateLeg(double elapsedMillis) {
   double legMovement = (elapsedMillis * LEG_SPEED) / 1000;
-  this->moveLeg(
+  this->setPosition(
     this->updateLegCoord(legMovement, currentX, targetX),
     this->updateLegCoord(legMovement, currentY, targetY),
     this->updateLegCoord(legMovement, currentZ, targetZ)
