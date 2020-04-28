@@ -146,17 +146,16 @@ double cycle_testing[][4][3] = {
 };
 
 #define WALK_X 80
-#define WALK_Y 80
 #define WALK_STEP_F 10
 #define WALK_STEP_B 100
 #define WALK_FLOOR -70
 #define WALK_HEIGHT 40
 double cycle_stand[][4][3] = {
   {
-    {-WALK_X, -WALK_Y, WALK_FLOOR},
+    {-WALK_X, -(WALK_STEP_B/2)-WALK_STEP_F, WALK_FLOOR},
     {WALK_X, -WALK_STEP_B, WALK_FLOOR},
     {WALK_X, WALK_STEP_F, WALK_FLOOR},
-    {-WALK_X, WALK_Y, WALK_FLOOR}
+    {-WALK_X, (WALK_STEP_B/2)-WALK_STEP_F, WALK_FLOOR}
   }
 };
 double cycle_walk[][3] = {
