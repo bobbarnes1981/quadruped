@@ -171,7 +171,7 @@ void loop() {
 
   if (Serial.available()) {
     int s = Serial.read();
-    Serial.println(s);
+    //Serial.println(s);
     if (s == 's') {
       currentStep = -1;
       currentState = state_startup;

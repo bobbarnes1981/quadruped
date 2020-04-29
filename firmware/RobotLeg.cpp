@@ -1,6 +1,8 @@
 #include "RobotLeg.h"
 
-#define LEG_SPEED 200 // mm/s
+// 645mg 0.20 sec/60°
+// 422   0.16 sec/60°
+#define LEG_SPEED 110 // mm/s
 
 RobotLeg::RobotLeg(double lengthFemur, double lengthTibia, double dirX, double dirY, RobotServo *hip, RobotServo *thigh, RobotServo *knee) {
   this->lengthFemur = lengthFemur;
@@ -75,6 +77,11 @@ void RobotLeg::solve2DOF(double tx, double ty) {
   //S=sqr(s*(s-AB)(s-BC)(s-AC))
   double S = sqrt(s * (s - this->lengthFemur) * (s - this->lengthTibia) * (s - AC));
 
+  if (isnan(S)) {
+    Serial.println("S:nan - location out of bounds");
+    return;
+  }
+
   //A=asin(2S/(AB*AC))
   double A = radToDeg(asin((2 * S) / (this->lengthFemur * AC)));
 
@@ -108,7 +115,7 @@ void RobotLeg::updateLeg(double elapsedMillis) {
     this->updateLegCoord(legMovement, currentZ, targetZ)
   );
 }
-#define DEBUG
+
 double RobotLeg::updateLegCoord(double distance, double current, double target) {
   double distanceToTarget = (target - current);
   if ((int)target != (int)current) {

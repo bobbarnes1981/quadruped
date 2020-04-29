@@ -19,11 +19,13 @@ RobotServo::~RobotServo() {
 void RobotServo::pulse(double pulseLength) {
   if (pulseLength < this->minPulse) {
     pulseLength = this->minPulse;
-    Serial.println("min limit");
+    Serial.print("min limit");
+    Serial.println(pulseLength, 6);
   }
   if (pulseLength > this->maxPulse) {
     pulseLength = this->maxPulse;
-    Serial.println("max limit");
+    Serial.print("max limit");
+    Serial.println(pulseLength, 6);
   }
   this->pwm->setPWM(this->servoNumber, 0, pulseLength / (0.020 / 4096));
 }
