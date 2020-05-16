@@ -1,12 +1,13 @@
 #include <Servo.h>
 
+#define SERVO_OFFSET 2
 #define SERVOS_MIN 0
 #define SERVOS_MAX 12
 #define PULSE_MIN 500
 #define PULSE_MAX 2500
-#define TIME_MIN 0
+#define TIME_MIN 1
 #define TIME_MAX 65535
-#define SPEED_MIN 0
+#define SPEED_MIN 1
 #define SPEED_MAX 65535
 
 Servo servos[SERVOS_MAX];
@@ -19,17 +20,17 @@ double targets[SERVOS_MAX];
 #define ASCII0 48
 #define ASCII9 57
 
-int previousMillis;
+unsigned long previousMillis;
 
 void setup() {
   Serial.begin(9600);
   
   for (int i = 0; i < SERVOS_MAX; i++) {
-    servos[i].attach(i+2);
+    //servos[i].attach(i+SERVO_OFFSET);
     speeds[i] = -1;
     times[i] = -1;
-    currents[i] = 1500;
-    targets[i] = 1500;
+    currents[i] = -1;
+    targets[i] = -1;
   }
 
   previousMillis = millis();
@@ -43,7 +44,7 @@ void loop() {
   // read buffer
   while (!bufferComplete && Serial.available()) {
     bufferContent[bufferLength] = Serial.read();
-    if (bufferContent[bufferLength] == 10) {
+    if (bufferContent[bufferLength] == '\r') {
       bufferComplete = true;
     }
     bufferLength++;
@@ -57,7 +58,7 @@ void loop() {
   }
 
   // update servos
-  int currentMillis = millis();
+  unsigned long currentMillis = millis();
   updateServos(currentMillis - previousMillis);
   previousMillis = currentMillis;
 }
@@ -75,11 +76,17 @@ void updateServos(int elapsedMillis) {
           currents[i] += (movement * dir);
         }
       } else if (times[i] != -1) {
-        Serial.println("T not implemented");
+        //Serial.println("T not implemented");
       } else {
         currents[i] = targets[i];
       }
-      servos[i].writeMicroseconds(currents[i]);
+
+      if (currents[i] != -1) {
+        servos[i].writeMicroseconds(currents[i]);
+        if (!servos[i].attached()) {
+          servos[i].attach(i+SERVO_OFFSET);
+        }
+      }
     }
   }
 }
@@ -87,6 +94,12 @@ void updateServos(int elapsedMillis) {
 int offset;
 
 void readCommand() {
+  #ifdef DEBUG
+  for (int i = 0; i < bufferLength; i++) {
+    Serial.print((char)bufferContent[i]);
+  }
+  Serial.println();
+  #endif  
   offset = 0;
   int c = -1;
   int p = -1;
@@ -117,14 +130,14 @@ void readCommand() {
     Serial.print("time: ");
     Serial.println(t);
     #endif
-    if (c > SERVOS_MIN && c < SERVOS_MAX) {
-      if ((s > SPEED_MIN && s < SPEED_MAX) || s == -1) {
+    if (c >= SERVOS_MIN && c < SERVOS_MAX) {
+      if ((s >= SPEED_MIN && s <= SPEED_MAX) || s == -1) {
         speeds[c] = s;
       }
-      if ((t > TIME_MIN && t < TIME_MAX) || t == -1) {
+      if ((t >= TIME_MIN && t <= TIME_MAX) || t == -1) {
         times[c] = t;
       }
-      if (p > PULSE_MIN && p < PULSE_MAX) {
+      if (p >= PULSE_MIN && p <= PULSE_MAX) {
         targets[c] = p;
       }
     }
