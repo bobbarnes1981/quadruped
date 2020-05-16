@@ -1,0 +1,151 @@
+#include <Servo.h>
+
+#define SERVOS_MIN 0
+#define SERVOS_MAX 12
+#define PULSE_MIN 500
+#define PULSE_MAX 2500
+#define TIME_MIN 0
+#define TIME_MAX 65535
+#define SPEED_MIN 0
+#define SPEED_MAX 65535
+
+Servo servos[SERVOS_MAX];
+int speeds[SERVOS_MAX];
+int times[SERVOS_MAX];
+double currents[SERVOS_MAX];
+double targets[SERVOS_MAX];
+
+#define INTBUFFER 5
+#define ASCII0 48
+#define ASCII9 57
+
+int previousMillis;
+
+void setup() {
+  Serial.begin(9600);
+  
+  for (int i = 0; i < SERVOS_MAX; i++) {
+    servos[i].attach(i+2);
+    speeds[i] = -1;
+    times[i] = -1;
+    currents[i] = 1500;
+    targets[i] = 1500;
+  }
+
+  previousMillis = millis();
+}
+
+int bufferContent[255];
+int bufferLength = 0;
+bool bufferComplete = false;
+
+void loop() {
+  // read buffer
+  while (!bufferComplete && Serial.available()) {
+    bufferContent[bufferLength] = Serial.read();
+    if (bufferContent[bufferLength] == 10) {
+      bufferComplete = true;
+    }
+    bufferLength++;
+  }
+
+  // process complete buffer
+  if (bufferComplete) {
+    readCommand();
+    bufferLength = 0;
+    bufferComplete = false;
+  }
+
+  // update servos
+  int currentMillis = millis();
+  updateServos(currentMillis - previousMillis);
+  previousMillis = currentMillis;
+}
+
+void updateServos(int elapsedMillis) {
+  for (int i = 0; i < SERVOS_MAX; i++) {
+    if (currents[i] != targets[i]) {
+      if (speeds[i] != -1) {
+        double distance = currents[i] - targets[i];
+        double movement = (speeds[i] * elapsedMillis) / 1000.0;
+        int dir = distance > 0 ? -1 : 1;
+        if (abs(distance) < movement) {
+          currents[i] = targets[i];
+        } else {
+          currents[i] += (movement * dir);
+        }
+      } else if (times[i] != -1) {
+        Serial.println("T not implemented");
+      } else {
+        currents[i] = targets[i];
+      }
+      servos[i].writeMicroseconds(currents[i]);
+    }
+  }
+}
+
+int offset;
+
+void readCommand() {
+  offset = 0;
+  int c = -1;
+  int p = -1;
+  int s = -1;
+  int t = -1;
+  if (bufferContent[offset] == (int)'#') {
+    offset++;
+    c = readInt();
+    if (bufferContent[offset] == (int)'P') {
+      offset++;
+      p = readInt();
+      if (bufferContent[offset] == (int)'S') {
+        offset++;
+        s = readInt();
+      }
+      if (bufferContent[offset] == (int)'T') {
+        offset++;
+        t = readInt();
+      }
+    }
+    #ifdef DEBUG
+    Serial.print("channel: ");
+    Serial.println(c);
+    Serial.print("pulse: ");
+    Serial.println(p);
+    Serial.print("speed: ");
+    Serial.println(s);
+    Serial.print("time: ");
+    Serial.println(t);
+    #endif
+    if (c > SERVOS_MIN && c < SERVOS_MAX) {
+      if ((s > SPEED_MIN && s < SPEED_MAX) || s == -1) {
+        speeds[c] = s;
+      }
+      if ((t > TIME_MIN && t < TIME_MAX) || t == -1) {
+        times[c] = t;
+      }
+      if (p > PULSE_MIN && p < PULSE_MAX) {
+        targets[c] = p;
+      }
+    }
+  }
+}
+
+int readInt() {
+  int b[INTBUFFER];
+  for (int i = 0; i < INTBUFFER; i++) {
+    b[i] = bufferContent[offset];
+    if (b[i] < ASCII0 || b[i] > ASCII9) {
+      int x = 0;
+      int p = 1;
+      for (int j = 0; j < i; j++) {
+        x += (b[i-(j+1)]-ASCII0) * p;
+        p *= 10;
+      }
+      return x;
+    }
+    offset++;
+  }
+  // read full buffer, fail.
+  return -1;
+}
