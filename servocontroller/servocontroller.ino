@@ -141,6 +141,29 @@ void readCommand() {
         targets[c] = p;
       }
     }
+  } else if (bufferContent[offset] == (int)'Q') {
+    offset++;
+    if (bufferContent[offset] == (int)'P') {
+      c = readInt();
+      if (c >= SERVOS_MIN && c < SERVOS_MAX) {
+        Serial.print(currents[c] / 10);
+        Serial.print("\r");
+      }
+    } else {
+      // assume <CR>
+      bool moving = false;
+      for (int i = 0; i < SERVOS_MAX; i++) {
+        if (targets[i] != currents[i]) {
+          moving = true;
+          break;
+        }
+      }
+      if (moving) {
+        Serial.print("+\r");
+      } else {
+        Serial.print(".\r");
+      }
+    }
   }
 }
 
