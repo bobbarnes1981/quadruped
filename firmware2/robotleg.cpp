@@ -78,7 +78,9 @@ void RobotLeg::solve2DOF(double tx, double ty, int uss) {
   // Check if Hypoteneuse (AC) is big enough to mean triangle is obtuse
   // as rule of sines doesn't work on obtuse angles, could use rule of
   // cosines
-  if (AC > sqrt(pow(this->lengthFemur, 2) + pow(this->lengthTibia, 2))) {
+//  if (AC > sqrt(pow(this->lengthFemur, 2) + pow(this->lengthTibia, 2))) {
+  // check if any angle is greater than 90
+  if (B > 90 || (ac_angle+A) > 90 || (180-(B+ac_angle+A)) > 90 ) {
     B = 180 - B;
   }
   

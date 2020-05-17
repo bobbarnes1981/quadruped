@@ -40,19 +40,16 @@ void Quadruped::walk() {
 void Quadruped::walkLeg(RobotLeg *leg) {
 
   //DEBUGGING
-  leg->moveLegAbs(120, 0, 60, 750); // straight out
-  delay(1000);
-  leg->moveLegAbs(120, 0, 0, 750);
-  delay(1000);
-  leg->moveLegAbs(100, 0, 0, 750);
+//  leg->moveLegAbs(120, 0, 60, 750); // straight out
+//  leg->moveLegAbs(60, 0, -120, 750);
   
 
-//  leg->moveLegRel(0, 0, WALK_HEIGHT, 750); // raise
-//  delay(750);
-//  leg->moveLegRel(0, WALK_STEP_B, 0, 750); // move
-//  delay(750);
-//  leg->moveLegRel(0, 0, -WALK_HEIGHT, 750); // lower
-//  delay(750);
+  leg->moveLegRel(0, 0, WALK_HEIGHT, 750); // raise
+  delay(750);
+  leg->moveLegRel(0, WALK_STEP_B, 0, 750); // move
+  delay(750);
+  leg->moveLegRel(0, 0, -WALK_HEIGHT, 750); // lower
+  delay(750);
 }
 
 void Quadruped::walkBody() {

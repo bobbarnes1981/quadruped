@@ -14,7 +14,10 @@ RobotServo::RobotServo(int servoNumber, int offset, int dir, int minPulse, int m
 // TODO: implement this in the servo controller
 void RobotServo::pulse(int pulseLength, int uss) {
   if (pulseLength < this->minPulse) {
-//    Serial.println("error-min");
+//    Serial.print("error-min ");
+//    Serial.print(pulseLength);
+//    Serial.print(" < ");
+//    Serial.println(this->minPulse);
 //    Serial.println(pulseLength);
     pulseLength = this->minPulse;
   }
@@ -32,18 +35,18 @@ void RobotServo::pulse(int pulseLength, int uss) {
     Serial.print(uss);
   }
   Serial.print('\r');
+  Serial.print('\n');
 }
 
 // set servo to specified angle (adjusts for offset and direction of servo)
 void RobotServo::angle(double angleDegrees, int uss) {
-//  Serial.println();
-//  Serial.print("angle ");
+//  Serial.print("angle abs ");
 //  Serial.println(angleDegrees);
   int adjustedAngle = this->offset + (angleDegrees * this->dir);
-//  Serial.println();
-//  Serial.print("angle ");
+//  Serial.print("angle adj ");
 //  Serial.println(adjustedAngle);
-  this->pulse(this->mapDouble(adjustedAngle, this->minAngle, this->maxAngle, this->minPulse, this->maxPulse), uss);
+  int p = this->mapDouble(adjustedAngle, this->minAngle, this->maxAngle, this->minPulse, this->maxPulse);
+  this->pulse(p, uss);
 }
 
 double RobotServo::mapDouble(double x, double in_min, double in_max, double out_min, double out_max) {
