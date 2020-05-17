@@ -30,11 +30,11 @@ void Quadruped::walkInit() {
 
 void Quadruped::walk() {
   this->walkLeg(this->rearRight);
-//  this->walkLeg(this->frontRight);
-//  this->walkBody();
-//  this->walkLeg(this->rearLeft);
-//  this->walkLeg(this->frontLeft);
-//  this->walkBody();
+  this->walkLeg(this->frontRight);
+  this->walkBody();
+  this->walkLeg(this->rearLeft);
+  this->walkLeg(this->frontLeft);
+  this->walkBody();
 }
 
 void Quadruped::walkLeg(RobotLeg *leg) {

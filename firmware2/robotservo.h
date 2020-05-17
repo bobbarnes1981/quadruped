@@ -6,16 +6,16 @@
 class RobotServo {
   private:
     int servoNumber;
-    int offset;
-    int dir;
-    int minPulse;
-    int maxPulse;
-    int minAngle;
-    int maxAngle;
+    double offset;
+    double dir;
+    double minPulse;
+    double maxPulse;
+    double minAngle;
+    double maxAngle;
     void pulse(int pulseLength, int uss);
     double mapDouble(double x, double in_min, double in_max, double out_min, double out_max);
   public:
-    RobotServo(int servoNumber, int offset, int dir, int minPulse, int maxPulse, int minAngle, int maxAngle);
+    RobotServo(int servoNumber, double offset, double dir, double minPulse, double maxPulse, double minAngle, double maxAngle);
     void angle(double angleDegrees, int uss);
 };
 

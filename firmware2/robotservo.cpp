@@ -1,6 +1,6 @@
 #include "robotservo.h"
 
-RobotServo::RobotServo(int servoNumber, int offset, int dir, int minPulse, int maxPulse, int minAngle, int maxAngle) {
+RobotServo::RobotServo(int servoNumber, double offset, double dir, double minPulse, double maxPulse, double minAngle, double maxAngle) {
   this->servoNumber = servoNumber;
   this->offset = offset;
   this->dir = dir;
@@ -35,7 +35,6 @@ void RobotServo::pulse(int pulseLength, int uss) {
     Serial.print(uss);
   }
   Serial.print('\r');
-  Serial.print('\n');
 }
 
 // set servo to specified angle (adjusts for offset and direction of servo)
