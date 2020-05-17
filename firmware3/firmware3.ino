@@ -1,11 +1,15 @@
-#define SERVO_FREQ 50       // Analog servos run at ~50 Hz updates
-
-#define OSC_FREQ 26660574   // measured using arduino nano with pulseIn
-
 // TODO: maybe replace classes with functions instead, to save on memory
 
 #define LENGTH_FEMUR 59.0
 #define LENGTH_TIBIA 122.0
+
+#define BUTTON_A 7
+#define BUTTON_B 8
+#define BUTTON_C 9
+#define LED_R 7
+#define LED_G 8
+#define LEG_Y 9
+#define SPEAKER 5
 
 #include "RobotServo.h"
 #include "RobotLeg.h"
@@ -53,28 +57,84 @@ RobotLeg legFL = RobotLeg(
 
 Quadruped quadruped = Quadruped(&legRL, &legRR, &legFR, &legFL);
 
-unsigned long lastMillis = 0;
 bool walking = false;
 void setup() {
   Serial.begin(9600);
 
   delay(10);
 
+  pinMode(BUTTON_A, INPUT);
+  pinMode(BUTTON_B, INPUT);
+  pinMode(BUTTON_C, INPUT);
+  pinMode(SPEAKER, OUTPUT);
+
   quadruped.initialise();
 
-  lastMillis = millis();
+  beep(128, 125);
+  beep(0, 125);
+  beep(128, 125);
 }
 
+void beep(int ton, int len) {
+  analogWrite(SPEAKER, ton);
+  delay(len);
+  analogWrite(SPEAKER, 0);
+}
+
+enum States {
+  state_start,
+  state_input,
+  state_walk_ready,
+  state_walk_walking
+};
+
+States currentState = state_start;
+
 void loop() {
-  unsigned long currentMillis = millis();
-  unsigned long elapsedMillis = currentMillis - lastMillis;
-  lastMillis = currentMillis;
-  //Serial.println(elapsedMillis);
-  quadruped.updateQuadruped(elapsedMillis);
+  // TODO: move state machine inside class when other state machine has been deleted
+  switch (currentState) {
+    case state_start:
+      {
+        quadruped.stateStartup();
+        currentState = state_input;
+      }
+      break;
+    case state_input:
+      {
+        int a = digitalRead(BUTTON_A);
+        if (!a) {
+          beep(128, 125);
+          quadruped.stateWalkReady();
+          currentState = state_walk_ready;
+        }
+      }
+      break;
+    case state_walk_ready:
+      {
+        int a = digitalRead(BUTTON_A);
+        if (!a) {
+          beep(128, 125);
+          beep(0, 62);
+          beep(128, 125);
+          quadruped.stateStartup();
+          currentState = state_input;
+        }
+        int b = digitalRead(BUTTON_B);
+        if (!b) {
+          beep(128, 125);
+          quadruped.stateWalking();
+          currentState = state_walk_walking;
+        }
+      }
+      break;
+    case state_walk_walking:
+      {
 
-  if (walking == false) {
-
-    walking = true;
-    quadruped.walk();
+      }
+      break;
+    default:
+      Serial.print("unhandled state: ");
+      Serial.println(currentState);
+      break;
   }
 }

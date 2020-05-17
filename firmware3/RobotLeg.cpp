@@ -2,7 +2,6 @@
 
 // 645mg 0.20 sec/60°
 // 422   0.16 sec/60°
-#define LEG_SPEED 110 // mm/s
 
 RobotLeg::RobotLeg(double lengthFemur, double lengthTibia, double dirX, double dirY, RobotServo *hip, RobotServo *thigh, RobotServo *knee) {
   this->lengthFemur = lengthFemur;
@@ -14,10 +13,6 @@ RobotLeg::RobotLeg(double lengthFemur, double lengthTibia, double dirX, double d
   this->knee = knee;
 }
 
-RobotLeg::~RobotLeg() {
-  
-}
-
 // move the foot to the specified position immediately
 // target x=l/r y=f/b z=u/d
 void RobotLeg::moveLeg(double x, double y, double z) {
@@ -25,6 +20,13 @@ void RobotLeg::moveLeg(double x, double y, double z) {
     (x * this->dirX),
     (y * this->dirY),
     z
+  ); 
+}
+void RobotLeg::moveLegRel(double x, double y, double z) {
+  this->setPosition(
+    this->currentX + (x * this->dirX),
+    this->currentY + (y * this->dirY),
+    this->currentZ + z
   ); 
 }
 
@@ -37,18 +39,6 @@ void RobotLeg::setPosition(double x, double y, double z) {
     this->currentY + this->offsetY,
     this->currentZ + this->offsetZ
   ); 
-}
-
-void RobotLeg::setAbsoluteTarget(double x, double y, double z) {
-  this->targetX = (x * this->dirX);
-  this->targetY = (y * this->dirY);
-  this->targetZ = z;
-}
-
-void RobotLeg::setRelativeTarget(double x, double y, double z) {
-  this->targetX = this->currentX + (x * this->dirX);
-  this->targetY = this->currentY + (y * this->dirY);
-  this->targetZ = this->currentZ + z;
 }
 
 void RobotLeg::setOffset(double x, double y, double z) {
@@ -104,38 +94,4 @@ void RobotLeg::solve2DOF(double tx, double ty) {
 // convert radians to degrees
 double RobotLeg::radToDeg(double rad) {
   return rad * (180 / PI);
-}
-
-void RobotLeg::updateLeg(double elapsedMillis) {
-  double legMovement = (elapsedMillis * LEG_SPEED) / 1000;
-  this->setPosition(
-    this->updateLegCoord(legMovement, currentX, targetX),
-    this->updateLegCoord(legMovement, currentY, targetY),
-    this->updateLegCoord(legMovement, currentZ, targetZ)
-  );
-}
-
-double RobotLeg::updateLegCoord(double distance, double current, double target) {
-  double distanceToTarget = (target - current);
-  if ((int)target != (int)current) {
-    if (target < current) {
-      if (abs(distanceToTarget) > distance) {
-        current -= distance;
-      } else {
-        current = target;
-      }
-    } else if (target > current) {
-      if (abs(distanceToTarget) > distance) {
-        current += distance;
-      } else {
-        current = target;
-      }
-    }
-  } else {
-  }
-  return current;
-}
-
-bool RobotLeg::isMoving() {
-  return (int)targetX != (int)currentX || (int)targetY != (int)currentY || (int)targetZ != (int)currentZ;
 }

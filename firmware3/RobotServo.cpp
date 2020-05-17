@@ -10,10 +10,6 @@ RobotServo::RobotServo(int servoNumber, double offset, double dir, double minPul
   this->maxAngle = maxAngle;
 }
 
-RobotServo::~RobotServo() {
-  
-}
-
 // set the servo to the specified pulse width (restricts the servo to the specified bounds)
 void RobotServo::pulse(double pulseLength) {
   if (pulseLength < this->minPulse) {
@@ -26,10 +22,10 @@ void RobotServo::pulse(double pulseLength) {
   Serial.print('#');
   Serial.print(this->servoNumber);
   Serial.print('P');
-  Serial.print(pulseLength * 1000000);
-  //TODO: S
+  Serial.print((int)(pulseLength * 1000000));
+  Serial.print('S');
+  Serial.print(1000);
   Serial.print('\r');
-//  this->pwm->setPWM(this->servoNumber, 0, pulseLength / (0.020 / 4096));
 }
 
 // set servo to specified angle (adjusts for offset and direction of servo)
