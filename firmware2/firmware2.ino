@@ -38,6 +38,11 @@ enum state {
 state currentState = start;
 
 #define BUTTON_A 7
+#define BUTTON_B 8
+#define BUTTON_C 9
+#define LED_R 7
+#define LED_G 8
+#define LEG_Y 9
 #define SPEAKER 5
 
 void setup() {
@@ -51,7 +56,7 @@ void setup() {
   delay(1000);
   
   analogWrite(SPEAKER, 128);
-  delay(250);
+  delay(125);
   analogWrite(SPEAKER, 0);
 }
 
@@ -68,7 +73,7 @@ void loop() {
         int notPressed = digitalRead(BUTTON_A);
         if (!notPressed) {
           analogWrite(SPEAKER, 128);
-          delay(500);
+          delay(250);
           analogWrite(SPEAKER, 0);
           currentState = walk_init;
         }
@@ -85,14 +90,14 @@ void loop() {
         int notPressed = digitalRead(BUTTON_A);
         if (!notPressed) {
           analogWrite(SPEAKER, 128);
-          delay(500);
+          delay(250);
           analogWrite(SPEAKER, 0);
           currentState = start;
         }
         notPressed = digitalRead(BUTTON_B);
         if (!notPressed) {
           analogWrite(SPEAKER, 128);
-          delay(500);
+          delay(250);
           analogWrite(SPEAKER, 0);
           currentState = walk_step;
         }

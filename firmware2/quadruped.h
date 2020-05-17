@@ -10,11 +10,14 @@ class Quadruped {
     RobotLeg *rearRight;
     RobotLeg *frontRight;
     RobotLeg *frontLeft;
+    void walkLeg(RobotLeg *leg);
+    void walkBody();
   public:
     Quadruped(RobotLeg *rearLeft, RobotLeg *rearRight, RobotLeg *frontRight, RobotLeg *frontLeft);
     void initialise();
     void waiting();
     void walkInit();
+    void walk();
 };
 
 #endif

@@ -29,15 +29,32 @@ void Quadruped::walkInit() {
 }
 
 void Quadruped::walk() {
-  // TODO: this relative move for each leg in turn RR,FR, BODY, RL, FL, BODY
+  this->walkLeg(this->rearRight);
+//  this->walkLeg(this->frontRight);
+//  this->walkBody();
+//  this->walkLeg(this->rearLeft);
+//  this->walkLeg(this->frontLeft);
+//  this->walkBody();
+}
 
-  // LEG
-//  {0, 0, WALK_HEIGHT}, // raise
-//  {0, WALK_STEP_B, 0}, // move
-//  {0, 0, -WALK_HEIGHT}, // lower
+void Quadruped::walkLeg(RobotLeg *leg) {
 
-  // BODY
-//  {0, -WALK_STEP_B / 2, 0}, // forward
+  //DEBUGGING
+  leg->moveLegAbs(120, 0, 60, 750); // straight out
+  delay(1000);
+  leg->moveLegAbs(120, 0, 0, 750);
+  delay(1000);
+  leg->moveLegAbs(100, 0, 0, 750);
+  
 
+//  leg->moveLegRel(0, 0, WALK_HEIGHT, 750); // raise
+//  delay(750);
+//  leg->moveLegRel(0, WALK_STEP_B, 0, 750); // move
+//  delay(750);
+//  leg->moveLegRel(0, 0, -WALK_HEIGHT, 750); // lower
+//  delay(750);
+}
 
+void Quadruped::walkBody() {
+  this->rearRight->moveLegRel(0, -WALK_STEP_B / 2, 0, 750);
 }

@@ -24,6 +24,7 @@ class RobotLeg {
   public:
     RobotLeg(double lengthFemur, double lengthTibia, double dirX, double dirY, RobotServo *hip, RobotServo *thigh, RobotServo *knee);
     void moveLegAbs(int x, int y, int z, int uss);
+    void moveLegRel(int x, int y, int z, int uss);
 };
 
 #endif

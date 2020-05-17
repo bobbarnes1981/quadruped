@@ -16,7 +16,7 @@ class RobotServo {
     double mapDouble(double x, double in_min, double in_max, double out_min, double out_max);
   public:
     RobotServo(int servoNumber, int offset, int dir, int minPulse, int maxPulse, int minAngle, int maxAngle);
-    void angle(int angleDegrees, int uss);
+    void angle(double angleDegrees, int uss);
 };
 
 #endif
