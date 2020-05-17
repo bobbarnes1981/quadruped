@@ -12,9 +12,10 @@
 
 Servo servos[SERVOS_MAX];
 int speeds[SERVOS_MAX];
-int times[SERVOS_MAX];
 double currents[SERVOS_MAX];
 double targets[SERVOS_MAX];
+double maxs[SERVOS_MAX];
+double mins[SERVOS_MAX];
 
 #define INTBUFFER 5
 #define ASCII0 48
@@ -28,9 +29,10 @@ void setup() {
   for (int i = 0; i < SERVOS_MAX; i++) {
     //servos[i].attach(i+SERVO_OFFSET);
     speeds[i] = -1;
-    times[i] = -1;
     currents[i] = -1;
     targets[i] = -1;
+    maxs[i] = 2500;
+    mins[i] = 500;
   }
 
   previousMillis = millis();
@@ -70,13 +72,19 @@ void updateServos(int elapsedMillis) {
         double distance = currents[i] - targets[i];
         double movement = (speeds[i] * elapsedMillis) / 1000.0;
         int dir = distance > 0 ? -1 : 1;
+        double next;
         if (abs(distance) < movement) {
-          currents[i] = targets[i];
+          next = targets[i];
         } else {
-          currents[i] += (movement * dir);
+          next = currents[i] + (movement * dir);
         }
-      } else if (times[i] != -1) {
-        //Serial.println("T not implemented");
+        if (next < mins[i]) {
+          next = mins[i];
+        }
+        if (next > maxs[i]) {
+          next = maxs[i];
+        }
+        currents[i] = next;
       } else {
         currents[i] = targets[i];
       }
@@ -135,7 +143,9 @@ void readCommand() {
         speeds[c] = s;
       }
       if ((t >= TIME_MIN && t <= TIME_MAX) || t == -1) {
-        times[c] = t;
+        // TODO: validate this!
+        // milliseconds per second
+        speeds[c] = abs(currents[c] - p) / t * 1000;
       }
       if (p >= PULSE_MIN && p <= PULSE_MAX) {
         targets[c] = p;
