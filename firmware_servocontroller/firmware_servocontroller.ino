@@ -72,9 +72,9 @@ void setup() {
 
   quadruped.initialise();
 
-  beep(128, 125);
-  beep(0, 125);
-  beep(128, 125);
+  beep(128, 62);
+  beep(0, 62);
+  beep(128, 62);
 }
 
 void beep(int ton, int len) {
@@ -106,6 +106,7 @@ void loop() {
         int a = digitalRead(BUTTON_A);
         if (!a) {
           beep(128, 125);
+          beep(0, 125);
           quadruped.stateWalkReady();
           currentState = state_walk_ready;
         }
@@ -115,15 +116,15 @@ void loop() {
       {
         int a = digitalRead(BUTTON_A);
         if (!a) {
-          beep(128, 125);
-          beep(0, 62);
-          beep(128, 125);
+          beep(62, 125);
+          beep(0, 125);
           quadruped.stateStartup();
           currentState = state_input;
         }
         int b = digitalRead(BUTTON_B);
         if (!b) {
           beep(128, 125);
+          beep(0, 125);
           quadruped.stateWalking();
           currentState = state_walk_walking;
         }
@@ -133,9 +134,8 @@ void loop() {
       {
         int b = digitalRead(BUTTON_B);
         if (!b) {
-          beep(128, 125);
-          beep(0, 62);
-          beep(128, 125);
+          beep(62, 125);
+          beep(0, 125);
           quadruped.stateWalkReady();
           currentState = state_walk_ready;
         }
