@@ -78,6 +78,10 @@ void updateServos(int elapsedMillis) {
         double distance = currents[i] - targets[i];
         double movement = (speeds[i] * elapsedMillis) / 1000.0;
         int dir = distance > 0 ? -1 : 1;
+        #ifdef DEBUG
+        Serial.print("direction ");
+        Serial.println(dir);
+        #endif
         double next;
         if (abs(distance) < movement) {
           next = targets[i];
