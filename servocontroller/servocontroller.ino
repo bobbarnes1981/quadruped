@@ -14,8 +14,8 @@ Servo servos[SERVOS_MAX];
 int speeds[SERVOS_MAX];
 double currents[SERVOS_MAX];
 double targets[SERVOS_MAX];
-double maxs[SERVOS_MAX];
-double mins[SERVOS_MAX];
+int maxs[SERVOS_MAX];
+int mins[SERVOS_MAX];
 
 #define INTBUFFER 5
 #define ASCII0 48
@@ -67,7 +67,14 @@ void loop() {
 void updateServos(int elapsedMillis) {
   for (int i = 0; i < SERVOS_MAX; i++) {
     if (currents[i] != targets[i]) {
-      if (speeds[i] != -1) {
+      #ifdef DEBUG
+      Serial.println(i);
+      Serial.print("current ");
+      Serial.println(currents[i]);
+      Serial.print("speeds ");
+      Serial.println(currents[i]);
+      #endif
+      if (speeds[i] != -1 && currents[i] != -1) {
         double distance = currents[i] - targets[i];
         double movement = (speeds[i] * elapsedMillis) / 1000.0;
         int dir = distance > 0 ? -1 : 1;
@@ -84,7 +91,13 @@ void updateServos(int elapsedMillis) {
           next = maxs[i];
         }
         currents[i] = next;
+        #ifdef DEBUG
+        Serial.println(currents[i]);
+        #endif
       } else {
+        #ifdef DEBUG
+        Serial.println("done!");
+        #endif
         currents[i] = targets[i];
       }
 
