@@ -154,10 +154,10 @@ void readCommand() {
       Serial.println(t);
       #endif
       if (c >= SERVOS_MIN && c < SERVOS_MAX) {
-        if ((s >= SPEED_MIN && s <= SPEED_MAX) || s == -1) {
+        if (s != -1 && (s >= SPEED_MIN && s <= SPEED_MAX)) {
           speeds[c] = s;
         }
-        if ((t >= TIME_MIN && t <= TIME_MAX) || t == -1) {
+        if (t != -1 && (t >= TIME_MIN && t <= TIME_MAX)) {
           // TODO: validate this!
           // milliseconds per second
           speeds[c] = abs(currents[c] - p) / t * 1000;
