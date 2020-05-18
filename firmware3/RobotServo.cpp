@@ -10,6 +10,12 @@ RobotServo::RobotServo(int servoNumber, double offset, double dir, double minPul
   this->maxAngle = maxAngle;
 }
 
+// set servo to specified angle (adjusts for offset and direction of servo)
+void RobotServo::angle(double angleDegrees) {
+  double adjustedAngle = this->offset + (angleDegrees * this->dir);
+  this->pulse(this->doubleMap(adjustedAngle, this->minAngle, this->maxAngle, this->minPulse, this->maxPulse));
+}
+
 // set the servo to the specified pulse width (restricts the servo to the specified bounds)
 void RobotServo::pulse(double pulseLength) {
   if (pulseLength < this->minPulse) {
@@ -23,15 +29,9 @@ void RobotServo::pulse(double pulseLength) {
   Serial.print(this->servoNumber);
   Serial.print('P');
   Serial.print((int)(pulseLength * 1000000));
-  Serial.print('S');
+  Serial.print('T');
   Serial.print(1000);
   Serial.print('\r');
-}
-
-// set servo to specified angle (adjusts for offset and direction of servo)
-void RobotServo::angle(double angleDegrees) {
-  double adjustedAngle = this->offset + (angleDegrees * this->dir);
-  this->pulse(this->doubleMap(adjustedAngle, this->minAngle, this->maxAngle, this->minPulse, this->maxPulse));
 }
 
 // implementation of arduino map function for double type

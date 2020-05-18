@@ -19,13 +19,13 @@ class RobotLeg {
     RobotServo *hip;
     RobotServo *thigh;
     RobotServo *knee;
+    void setPosition(double x, double y, double z);
     void solve3DOF(double tx, double ty, double tz);
     void solve2DOF(double tx, double ty);
     double radToDeg(double rad);
-    void setPosition(double x, double y, double z);
   public:
     RobotLeg(double lengthFemur, double lengthTibia, double dirX, double dirY, RobotServo *hip, RobotServo *thigh, RobotServo *knee);
-    void moveLeg(double x, double y, double z);
+    void moveLegAbs(double x, double y, double z);
     void moveLegRel(double x, double y, double z);
     void setOffset(double x, double y, double z);
 };

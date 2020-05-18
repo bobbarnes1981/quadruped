@@ -15,7 +15,7 @@ RobotLeg::RobotLeg(double lengthFemur, double lengthTibia, double dirX, double d
 
 // move the foot to the specified position immediately
 // target x=l/r y=f/b z=u/d
-void RobotLeg::moveLeg(double x, double y, double z) {
+void RobotLeg::moveLegAbs(double x, double y, double z) {
   this->setPosition(
     (x * this->dirX),
     (y * this->dirY),
