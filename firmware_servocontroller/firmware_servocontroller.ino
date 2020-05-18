@@ -142,8 +142,7 @@ void loop() {
       }
       break;
     default:
-      Serial.print("unhandled state: ");
-      Serial.println(currentState);
+      // unhandled
       break;
   }
 }
