@@ -11,6 +11,8 @@
 #define LEG_Y 9
 #define SPEAKER 5
 
+#include <SoftwareSerial.h>
+
 #include "RobotServo.h"
 #include "RobotLeg.h"
 #include "Quadruped.h"
@@ -129,7 +131,14 @@ void loop() {
       break;
     case state_walk_walking:
       {
-
+        int b = digitalRead(BUTTON_B);
+        if (!b) {
+          beep(128, 125);
+          beep(0, 62);
+          beep(128, 125);
+          quadruped.stateWalkReady();
+          currentState = state_walk_ready;
+        }
       }
       break;
     default:

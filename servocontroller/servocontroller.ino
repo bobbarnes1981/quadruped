@@ -27,7 +27,6 @@ void setup() {
   Serial.begin(9600);
   
   for (int i = 0; i < SERVOS_MAX; i++) {
-    //servos[i].attach(i+SERVO_OFFSET);
     speeds[i] = -1;
     currents[i] = -1;
     targets[i] = -1;
@@ -127,28 +126,28 @@ void readCommand() {
         offset++;
         t = readInt();
       }
-    }
-    #ifdef DEBUG
-    Serial.print("channel: ");
-    Serial.println(c);
-    Serial.print("pulse: ");
-    Serial.println(p);
-    Serial.print("speed: ");
-    Serial.println(s);
-    Serial.print("time: ");
-    Serial.println(t);
-    #endif
-    if (c >= SERVOS_MIN && c < SERVOS_MAX) {
-      if ((s >= SPEED_MIN && s <= SPEED_MAX) || s == -1) {
-        speeds[c] = s;
-      }
-      if ((t >= TIME_MIN && t <= TIME_MAX) || t == -1) {
-        // TODO: validate this!
-        // milliseconds per second
-        speeds[c] = abs(currents[c] - p) / t * 1000;
-      }
-      if (p >= PULSE_MIN && p <= PULSE_MAX) {
-        targets[c] = p;
+      #ifdef DEBUG
+      Serial.print("channel: ");
+      Serial.println(c);
+      Serial.print("pulse: ");
+      Serial.println(p);
+      Serial.print("speed: ");
+      Serial.println(s);
+      Serial.print("time: ");
+      Serial.println(t);
+      #endif
+      if (c >= SERVOS_MIN && c < SERVOS_MAX) {
+        if ((s >= SPEED_MIN && s <= SPEED_MAX) || s == -1) {
+          speeds[c] = s;
+        }
+        if ((t >= TIME_MIN && t <= TIME_MAX) || t == -1) {
+          // TODO: validate this!
+          // milliseconds per second
+          speeds[c] = abs(currents[c] - p) / t * 1000;
+        }
+        if (p >= PULSE_MIN && p <= PULSE_MAX) {
+          targets[c] = p;
+        }
       }
     }
   } else if (bufferContent[offset] == (int)'Q') {
@@ -157,7 +156,7 @@ void readCommand() {
       c = readInt();
       if (c >= SERVOS_MIN && c < SERVOS_MAX) {
         Serial.print(currents[c] / 10);
-        Serial.print("\r");
+        Serial.print('\r');
       }
     } else {
       // assume <CR>
