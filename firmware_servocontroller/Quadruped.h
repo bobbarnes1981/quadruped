@@ -47,6 +47,7 @@ class Quadruped {
     void stateStartup();
     void stateWalkReady();
     void stateWalking();
+    void stateDemo();
     
     void alterOffsets(double x, double y, double z);
 };

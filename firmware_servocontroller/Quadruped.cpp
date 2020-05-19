@@ -57,6 +57,24 @@ void Quadruped::walkBody() {
   delay(1000);
 }
 
+void Quadruped::stateDemo() {
+  // stand
+
+  // left each leg in turn and replace (closer?)
+
+  // below movements : alterOffsets, move all legs rel to 0,0,0
+
+  // lower body
+
+  // raise body
+
+  // move body left, right, front, back
+
+  // move body in circle
+
+  // sit back down
+}
+
 void Quadruped::alterOffsets(double x, double y, double z) {
   offsetX += x;
   offsetY += y;

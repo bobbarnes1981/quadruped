@@ -87,7 +87,8 @@ enum States {
   state_start,
   state_input,
   state_walk_ready,
-  state_walk_walking
+  state_walk_walking,
+  state_demo
 };
 
 States currentState = state_start;
@@ -109,6 +110,13 @@ void loop() {
           beep(0, 125);
           quadruped.stateWalkReady();
           currentState = state_walk_ready;
+        }
+        int c = digitalRead(BUTTON_C);
+        if (!c) {
+          beep(128, 125);
+          beep(0, 125);
+          quadruped.stateDemo();
+          currentState = state_demo;
         }
       }
       break;
@@ -138,6 +146,17 @@ void loop() {
           beep(0, 125);
           quadruped.stateWalkReady();
           currentState = state_walk_ready;
+        }
+      }
+      break;
+    case state_demo:
+      {
+        int b = digitalRead(BUTTON_B);
+        if (!b) {
+          beep(128, 125);
+          beep(0, 125);
+          quadruped.stateStartup();
+          currentState = state_input;
         }
       }
       break;
