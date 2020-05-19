@@ -24,9 +24,9 @@
 #define FL_THIGH 1
 #define FL_KNEE 2
 
-#define WALK_X 100 // FIXME: should be 80
+#define WALK_X 100 // Increased from 80 so legs don't move too close to body
 #define WALK_STEP_F 10
-#define WALK_STEP_B 90 // FIXME: should be 100
+#define WALK_STEP_B 100
 #define WALK_FLOOR -70
 #define WALK_HEIGHT 40
 
